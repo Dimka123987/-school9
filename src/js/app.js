@@ -452,8 +452,15 @@ function copyCode(button) {
  */
 function toggleMobileMenu() {
     const menu = document.querySelector('.navbar-menu');
+    const hamburger = document.querySelector('.hamburger');
+    
     if (menu) {
+        menu.classList.toggle('mobile-open');
         menu.classList.toggle('active');
+    }
+    
+    if (hamburger) {
+        hamburger.classList.toggle('active');
     }
 }
 
@@ -629,41 +636,18 @@ function getDefaultCourses() {
 }
 
 /**
- * Toggle mobile menu
- */
-function toggleMobileMenu() {
-    console.log('toggleMobileMenu called');
-    const menu = document.querySelector('.navbar-menu');
-    const hamburger = document.querySelector('.hamburger');
-    
-    console.log('Menu element:', menu);
-    console.log('Hamburger element:', hamburger);
-    
-    if (menu) {
-        menu.classList.toggle('mobile-open');
-        console.log('Menu classes:', menu.className);
-    }
-    
-    if (hamburger) {
-        hamburger.classList.toggle('active');
-        console.log('Hamburger classes:', hamburger.className);
-    }
-    
-    return false;
-}
-
-/**
  * Close mobile menu when clicking on a link
  */
 function closeMobileMenu() {
     const menu = document.querySelector('.navbar-menu');
     const hamburger = document.querySelector('.hamburger');
     
-    if (menu && menu.classList.contains('mobile-open')) {
+    if (menu) {
         menu.classList.remove('mobile-open');
+        menu.classList.remove('active');
     }
     
-    if (hamburger && hamburger.classList.contains('active')) {
+    if (hamburger) {
         hamburger.classList.remove('active');
     }
 }
@@ -677,9 +661,21 @@ if (document.readyState === 'loading') {
 
 function initMobileMenu() {
     const navLinks = document.querySelectorAll('.nav-link');
-    console.log('Found nav links:', navLinks.length);
     navLinks.forEach(link => {
         link.addEventListener('click', closeMobileMenu);
+    });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const menu = document.querySelector('.navbar-menu');
+        const hamburger = document.querySelector('.hamburger');
+        const navbar = document.querySelector('.navbar');
+        
+        if (menu && menu.classList.contains('mobile-open')) {
+            if (!navbar.contains(event.target)) {
+                closeMobileMenu();
+            }
+        }
     });
 }
 

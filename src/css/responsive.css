@@ -38,6 +38,13 @@
     }
     
     /* Navigation */
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
     .navbar-brand {
         flex: 1;
     }
@@ -46,10 +53,11 @@
         display: none;
     }
     
-    .navbar-menu.active {
+    .navbar-menu.active,
+    .navbar-menu.mobile-open {
         display: flex;
         position: absolute;
-        top: 60px;
+        top: 100%;
         left: 0;
         right: 0;
         flex-direction: column;
@@ -57,15 +65,36 @@
         border-bottom: 1px solid var(--border-color);
         padding: var(--space-lg);
         gap: 0;
+        max-height: calc(100vh - 60px);
+        overflow-y: auto;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        animation: slideDown 0.3s ease-out;
     }
     
-    .navbar-menu.active li {
+    .navbar-menu.active li,
+    .navbar-menu.mobile-open li {
         border-bottom: 1px solid var(--border-color);
         padding: var(--space-md) 0;
     }
     
-    .navbar-menu.active li:last-child {
+    .navbar-menu.active li:last-child,
+    .navbar-menu.mobile-open li:last-child {
         border-bottom: none;
+    }
+    
+    /* Ensure nav links are clickable */
+    .navbar-menu.active li a,
+    .navbar-menu.mobile-open li a {
+        display: block;
+        padding: var(--space-sm) 0;
+        color: var(--text-primary);
+    }
+    
+    /* Touch-friendly link targets */
+    .nav-link {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
     }
     
     /* Hero section */
@@ -96,6 +125,13 @@
     .btn {
         width: 100%;
         justify-content: center;
+        min-height: 48px;
+        padding: var(--space-md) var(--space-lg) !important;
+        font-size: var(--text-base) !important;
+    }
+    
+    .btn:active {
+        transform: scale(0.98);
     }
     
     /* Grid layouts */
@@ -256,6 +292,35 @@
     
     .progress-percent {
         font-size: var(--text-2xl);
+    }
+    
+    /* Input improvements for mobile */
+    input[type="text"],
+    input[type="email"],
+    input[type="search"],
+    textarea,
+    select {
+        font-size: 16px !important;
+        min-height: 44px;
+        padding: var(--space-md) !important;
+        width: 100%;
+        border-radius: var(--radius-md);
+        border: 2px solid var(--border-color);
+    }
+    
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="search"]:focus,
+    textarea:focus,
+    select:focus {
+        border-color: var(--accent-primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(var(--accent-primary-rgb), 0.1);
+    }
+    
+    textarea {
+        resize: vertical;
+        max-height: 200px;
     }
 }
 
