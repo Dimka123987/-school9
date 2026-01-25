@@ -1,0 +1,28 @@
+{
+  "name": "codepath-academy",
+  "version": "1.0.0",
+  "description": "Production-ready educational platform for learning C++ from beginner to advanced level",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js 3000",
+    "serve": "node server.js 8000"
+  },
+  "keywords": [
+    "C++",
+    "programming",
+    "education",
+    "learning",
+    "courses",
+    "tutorial"
+  ],
+  "author": "CodePath Academy",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codepath/academy.git"
+  }
+}

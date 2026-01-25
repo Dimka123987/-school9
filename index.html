@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Изучайте C++ с нуля до продвинутого уровня на платформе CodePath Academy">
+    <title>CodePath Academy - Изучайте C++ профессионально</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    
+    <!-- GSAP для продвинутых анимаций -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%236366f1'>C++</text></svg>">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <span class="brand-icon">C++</span>
+                    <span class="brand-text">CodePath Academy</span>
+                </div>
+                
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="courses.html" class="nav-link">Курсы</a></li>
+                    <li><a href="progress.html" class="nav-link">Прогресс</a></li>
+                    <li><a href="about.html" class="nav-link">О платформе</a></li>
+                </ul>
+                
+                <div class="navbar-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="hamburger" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Home Page -->
+            <section id="home-page" class="page active" style="display: block !important;">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1 class="hero-title">Изучайте C++ профессионально</h1>
+                        <p class="hero-subtitle">От нуля до продвинутого уровня. Практические уроки, реальные проекты и потрясающий опыт обучения.</p>
+                        
+                        <div class="hero-features">
+                            <div class="feature-badge">
+                                <span class="badge-icon">📚</span>
+                                <span>18+ Уроков</span>
+                            </div>
+                            <div class="feature-badge">
+                                <span class="badge-icon">🚀</span>
+                                <span>3 Уровня</span>
+                            </div>
+                            <div class="feature-badge">
+                                <span class="badge-icon">💻</span>
+                                <span>Практика</span>
+                            </div>
+                            <div class="feature-badge">
+                                <span class="badge-icon">📈</span>
+                                <span>Прогресс</span>
+                            </div>
+                        </div>
+                        
+                        <div class="hero-buttons">
+                            <a href="courses.html" class="btn btn-primary">
+                                Начать обучение
+                                <span class="btn-arrow">→</span>
+                            </a>
+                            <button class="btn btn-secondary" onclick="scrollToSection('how-it-works')">
+                                Узнать больше
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-visual">
+                        <div class="code-block hero-code">
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello, C++!" &lt;&lt; endl;
+    return 0;
+}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How It Works -->
+                <section id="how-it-works" class="how-it-works">
+                    <div class="section-header">
+                        <h2>Как это работает?</h2>
+                        <p>Структурированное обучение, спроектированное для вашего успеха</p>
+                    </div>
+                    
+                    <div class="steps-grid">
+                        <div class="step-card" data-step="1">
+                            <div class="step-number">1</div>
+                            <h3>Выберите курс</h3>
+                            <p>Начните с нуля или выберите продвинутый уровень. Все курсы структурированы логически.</p>
+                        </div>
+                        
+                        <div class="step-card" data-step="2">
+                            <div class="step-number">2</div>
+                            <h3>Изучайте теорию</h3>
+                            <p>Детальные объяснения, примеры кода и комментарии к каждому концепту.</p>
+                        </div>
+                        
+                        <div class="step-card" data-step="3">
+                            <div class="step-number">3</div>
+                            <h3>Практикуйтесь</h3>
+                            <p>Решайте задачи, пишите код и создавайте мини-проекты для закрепления.</p>
+                        </div>
+                        
+                        <div class="step-card" data-step="4">
+                            <div class="step-number">4</div>
+                            <h3>Отслеживайте прогресс</h3>
+                            <p>Видьте свой прогресс, отмечайте пройденные уроки и достигайте целей.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Stats Section -->
+                <section class="stats-section">
+                    <div class="stat-item">
+                        <div class="stat-number">18+</div>
+                        <div class="stat-label">Полных уроков</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Уровня сложности</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Примеров кода</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Бесплатно</div>
+                    </div>
+                </section>
+            </section>
+
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CodePath Academy</h4>
+                    <p>Современная платформа для изучения C++</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Курсы</h4>
+                    <ul>
+                        <li><a href="#" onclick="handleNavClick('courses')">Все курсы</a></li>
+                        <li><a href="#" onclick="handleNavClick('courses')">Для начинающих</a></li>
+                        <li><a href="#" onclick="handleNavClick('courses')">Продвинутый уровень</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="#" onclick="handleNavClick('about')">О платформе</a></li>
+                        <li><a href="#" onclick="handleNavClick('progress')">Мой прогресс</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodePath Academy. Все права защищены. Made with ❤️ for C++ developers.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/themes.js"></script>
+    <script src="src/js/animations.js"></script>
+    <script>
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate step cards
+            const stepCards = document.querySelectorAll('.step-card');
+            stepCards.forEach((card, index) => {
+                card.style.animation = `slideUp 0.6s ease-out forwards`;
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Animate hero elements
+            const heroTitle = document.querySelector('.hero-title');
+            const heroSubtitle = document.querySelector('.hero-subtitle');
+            const heroFeatures = document.querySelector('.hero-features');
+            const heroButtons = document.querySelector('.hero-buttons');
+            const heroCode = document.querySelector('.hero-code');
+
+            if (heroTitle) heroTitle.style.animation = 'slideUp 0.8s ease-out 0.2s forwards';
+            if (heroSubtitle) heroSubtitle.style.animation = 'slideUp 0.8s ease-out 0.3s forwards';
+            if (heroFeatures) heroFeatures.style.animation = 'slideUp 0.8s ease-out 0.4s forwards';
+            if (heroButtons) heroButtons.style.animation = 'slideUp 0.8s ease-out 0.5s forwards';
+            if (heroCode) heroCode.style.animation = 'slideInRight 0.8s ease-out 0.6s forwards';
+        });
+    </script>
+</body>
+</html>
+courses.html">Все курсы</a></li>
+                        <li><a href="courses.html">Для начинающих</a></li>
+                        <li><a href="courses.html">Продвинутый уровень</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="about.html">О платформе</a></li>
+                        <li><a href="progress.html

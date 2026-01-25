@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Курсы по C++ - от начинающих до продвинутого уровня на платформе CodePath Academy">
+    <title>Курсы - CodePath Academy</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    
+    <!-- GSAP для продвинутых анимаций -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%236366f1'>C++</text></svg>">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <span class="brand-icon">C++</span>
+                    <span class="brand-text">CodePath Academy</span>
+                </div>
+                
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="courses.html" class="nav-link">Курсы</a></li>
+                    <li><a href="progress.html" class="nav-link">Прогресс</a></li>
+                    <li><a href="about.html" class="nav-link">О платформе</a></li>
+                </ul>
+                
+                <div class="navbar-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="hamburger" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Courses Page -->
+            <section class="page active" style="display: block !important;">
+                <div class="page-header">
+                    <h1>Курсы по C++</h1>
+                    <p>Выберите уровень и начните обучение</p>
+                </div>
+                
+                <div class="courses-filter">
+                    <button class="filter-btn active" data-level="all">Все</button>
+                    <button class="filter-btn" data-level="beginner">Начинающие</button>
+                    <button class="filter-btn" data-level="intermediate">Средний</button>
+                    <button class="filter-btn" data-level="advanced">Продвинутый</button>
+                </div>
+                
+                <div id="courses-grid" class="courses-grid">
+                    <!-- Динамически заполняется из data/courses.json -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CodePath Academy</h4>
+                    <p>Современная платформа для изучения C++</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Курсы</h4>
+                    <ul>
+                        <li><a href="courses.html">Все курсы</a></li>
+                        <li><a href="courses.html">Для начинающих</a></li>
+                        <li><a href="courses.html">Продвинутый уровень</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="about.html">О платформе</a></li>
+                        <li><a href="progress.html">Мой прогресс</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodePath Academy. Все права защищены. Made with ❤️ for C++ developers.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/themes.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/courses.js"></script>
+    <script src="src/js/animations.js"></script>
+    <script>
+        let courses = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCoursesData().then(() => {
+                renderCoursesPage();
+            });
+        });
+
+        async function loadCoursesData() {
+            try {
+                const response = await fetch('src/data/courses.json');
+                courses = await response.json();
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+
+        function renderCoursesPage() {
+            const grid = document.getElementById('courses-grid');
+            if (!grid || !courses.length) return;
+            
+            let html = '';
+            
+            courses.forEach(course => {
+                const progress = getCourseProgress(course.id, course.lessons.length);
+                const levelLabels = {
+                    beginner: 'Для начинающих',
+                    intermediate: 'Средний уровень',
+                    advanced: 'Продвинутый уровень'
+                };
+                
+                html += `
+                    <div class="course-card" onclick="openCourse('${course.id}')">
+                        <div class="course-header">
+                            <span class="course-icon">${course.icon}</span>
+                            <span class="course-level">${levelLabels[course.level]}</span>
+                        </div>
+                        <div class="course-body">
+                            <h3 class="course-title">${course.title}</h3>
+                            <p class="course-description">${course.description}</p>
+                            <div class="course-stats">
+                                <div class="course-stat">
+                                    <div class="course-stat-number">${course.lessons.length}</div>
+                                    <div class="course-stat-label">Уроков</div>
+                                </div>
+                                <div class="course-stat">
+                                    <div class="course-stat-number">${progress.completed}</div>
+                                    <div class="course-stat-label">Завершено</div>
+                                </div>
+                                <div class="course-stat">
+                                    <div class="course-stat-number">${progress.percentage}%</div>
+                                    <div class="course-stat-label">Прогресс</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="course-button">
+                            ${progress.completed === course.lessons.length ? '✓ Завершено' : 'Начать'}
+                        </button>
+                    </div>
+                `;
+            });
+            
+            grid.innerHTML = html;
+            
+            // Setup filter buttons
+            setupCourseFilters();
+            
+            // Animate cards
+            const cards = grid.querySelectorAll('.course-card');
+            cards.forEach((card, index) => {
+                card.style.animation = `slideUp 0.6s ease-out forwards`;
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        }
+
+        function openCourse(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            if (course && course.lessons.length) {
+                sessionStorage.setItem('currentCourseId', courseId);
+                sessionStorage.setItem('currentLessonId', course.lessons[0].id);
+                window.location.href = 'lesson.html';
+            }
+        }
+
+        function setupCourseFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const level = btn.dataset.level;
+                    
+                    // Update active button
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Filter courses
+                    const cards = document.querySelectorAll('.course-card');
+                    cards.forEach(card => {
+                        if (level === 'all') {
+                            card.style.display = '';
+                        } else {
+                            const courseId = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+                            const course = courses.find(c => c.id === courseId);
+                            card.style.display = course.level === level ? '' : 'none';
+                        }
+                    });
+                });
+            });
+        }
+
+        function getCourseProgress(courseId, totalLessons) {
+            const progress = getProgress();
+            if (!progress[courseId]) {
+                return { completed: 0, percentage: 0 };
+            }
+            const completed = Object.keys(progress[courseId]).filter(
+                lessonId => progress[courseId][lessonId].completed
+            ).length;
+            return {
+                completed: completed,
+                percentage: totalLessons === 0 ? 0 : Math.round((completed / totalLessons) * 100)
+            };
+        }
+    </script>
+</body>
+</html>

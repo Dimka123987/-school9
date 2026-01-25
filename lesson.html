@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Уроки по C++ на платформе CodePath Academy">
+    <title>Урок - CodePath Academy</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    
+    <!-- GSAP для продвинутых анимаций -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%236366f1'>C++</text></svg>">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <span class="brand-icon">C++</span>
+                    <span class="brand-text">CodePath Academy</span>
+                </div>
+                
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="courses.html" class="nav-link">Курсы</a></li>
+                    <li><a href="progress.html" class="nav-link">Прогресс</a></li>
+                    <li><a href="about.html" class="nav-link">О платформе</a></li>
+                </ul>
+                
+                <div class="navbar-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="hamburger" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Lesson Page -->
+            <section class="page active" style="display: block !important;">
+                <div class="lesson-container">
+                    <div class="lesson-header">
+                        <a href="courses.html" class="btn-back">← Назад к курсам</a>
+                        <h1 id="lesson-title">Заголовок урока</h1>
+                        <div class="lesson-meta">
+                            <span id="lesson-level" class="badge">Уровень</span>
+                            <span id="lesson-time" class="time-estimate">~10 мин</span>
+                        </div>
+                    </div>
+
+                    <div class="lesson-content-wrapper">
+                        <!-- Main content area -->
+                        <div class="lesson-content" id="lesson-content">
+                            <!-- Динамически заполняется -->
+                        </div>
+
+                        <!-- Sidebar with progress -->
+                        <aside class="lesson-sidebar">
+                            <div class="sidebar-card">
+                                <h3>Прогресс курса</h3>
+                                <div class="progress-bar" id="course-progress">
+                                    <div class="progress-fill"></div>
+                                </div>
+                                <p id="progress-text" class="progress-text">0 из 0 уроков</p>
+                            </div>
+
+                            <div class="sidebar-card">
+                                <h3>Что ты выучил</h3>
+                                <ul id="learned-items" class="learned-list">
+                                    <!-- Динамически заполняется -->
+                                </ul>
+                            </div>
+
+                            <div class="sidebar-card">
+                                <h3>Навигация</h3>
+                                <div class="lesson-nav">
+                                    <button class="nav-btn prev-lesson" onclick="previousLesson()">← Предыдущий</button>
+                                    <button class="nav-btn next-lesson" onclick="nextLesson()">Следующий →</button>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+
+                    <!-- Mark as completed -->
+                    <div class="lesson-footer">
+                        <button class="btn btn-success" id="complete-btn" onclick="markLessonComplete()">
+                            ✓ Отметить как пройденный
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CodePath Academy</h4>
+                    <p>Современная платформа для изучения C++</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Курсы</h4>
+                    <ul>
+                        <li><a href="courses.html">Все курсы</a></li>
+                        <li><a href="courses.html">Для начинающих</a></li>
+                        <li><a href="courses.html">Продвинутый уровень</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="about.html">О платформе</a></li>
+                        <li><a href="progress.html">Мой прогресс</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodePath Academy. Все права защищены. Made with ❤️ for C++ developers.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/themes.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/courses.js"></script>
+    <script src="src/js/animations.js"></script>
+    <script>
+        let currentCourse = null;
+        let currentLesson = null;
+        let courses = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load courses
+            loadCoursesData().then(() => {
+                // Get IDs from sessionStorage
+                const courseId = sessionStorage.getItem('currentCourseId');
+                const lessonId = sessionStorage.getItem('currentLessonId');
+                
+                if (courseId && lessonId) {
+                    currentCourse = courses.find(c => c.id === courseId);
+                    if (currentCourse) {
+                        currentLesson = currentCourse.lessons.find(l => l.id === lessonId);
+                        if (currentLesson) {
+                            displayLesson(courseId, lessonId);
+                            updateProgressCircle();
+                        }
+                    }
+                }
+            });
+        });
+
+        async function loadCoursesData() {
+            try {
+                const response = await fetch('src/data/courses.json');
+                courses = await response.json();
+                console.log('Loaded courses:', courses.length);
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+
+        function displayLesson(courseId, lessonId) {
+            if (!currentCourse || !currentLesson) return;
+
+            // Update title and meta
+            document.getElementById('lesson-title').textContent = currentLesson.title;
+            document.getElementById('lesson-time').textContent = '~' + currentLesson.duration + ' мин';
+            
+            const levelBadge = document.getElementById('lesson-level');
+            const levelLabels = {
+                beginner: 'Для начинающих',
+                intermediate: 'Средний уровень',
+                advanced: 'Продвинутый уровень'
+            };
+            levelBadge.textContent = levelLabels[currentCourse.level] || 'Урок';
+            levelBadge.className = 'badge badge-' + currentCourse.level;
+
+            // Render content
+            const contentDiv = document.getElementById('lesson-content');
+            let html = '';
+
+            currentLesson.sections.forEach(section => {
+                html += `<h2>${section.title}</h2>`;
+                html += `<p>${section.content}</p>`;
+                
+                if (section.code) {
+                    html += `
+                        <div class="code-example">
+                            <div class="code-label">
+                                <span>C++ код</span>
+                                <button class="code-copy" onclick="copyCode(this)">📋 Копировать</button>
+                            </div>
+                            <pre class="code-block"><code>${escapeHtml(section.code)}</code></pre>
+                        </div>
+                    `;
+                }
+            });
+
+            contentDiv.innerHTML = html;
+
+            // Update learned items
+            const learnedItems = document.getElementById('learned-items');
+            let learnedHtml = '';
+            currentLesson.learned.forEach(item => {
+                learnedHtml += `<li>${item}</li>`;
+            });
+            learnedItems.innerHTML = learnedHtml;
+
+            // Update navigation buttons
+            updateNavigationButtons();
+
+            // Update complete button
+            const isCompleted = isLessonCompleted(courseId, lessonId);
+            const completeBtn = document.getElementById('complete-btn');
+            if (isCompleted) {
+                completeBtn.textContent = '✓ Уже пройденный';
+                completeBtn.disabled = true;
+            } else {
+                completeBtn.textContent = '✓ Отметить как пройденный';
+                completeBtn.disabled = false;
+            }
+
+            // Update progress
+            updateProgressCircle();
+        }
+
+        function updateProgressCircle() {
+            const completedLessons = getCompletedLessons(currentCourse.id).length;
+            const totalLessons = currentCourse.lessons.length;
+            const percentage = totalLessons === 0 ? 0 : Math.round((completedLessons / totalLessons) * 100);
+
+            document.getElementById('progress-text').textContent = `${completedLessons} из ${totalLessons} уроков`;
+
+            const progressBar = document.getElementById('course-progress').querySelector('.progress-fill');
+            if (progressBar) {
+                progressBar.style.width = percentage + '%';
+            }
+        }
+
+        function updateNavigationButtons() {
+            const currentIndex = currentCourse.lessons.findIndex(l => l.id === currentLesson.id);
+            const prevBtn = document.querySelector('.prev-lesson');
+            const nextBtn = document.querySelector('.next-lesson');
+
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === currentCourse.lessons.length - 1;
+        }
+
+        function previousLesson() {
+            const currentIndex = currentCourse.lessons.findIndex(l => l.id === currentLesson.id);
+            if (currentIndex > 0) {
+                const prevLesson = currentCourse.lessons[currentIndex - 1];
+                sessionStorage.setItem('currentCourseId', currentCourse.id);
+                sessionStorage.setItem('currentLessonId', prevLesson.id);
+                currentLesson = prevLesson;
+                displayLesson(currentCourse.id, prevLesson.id);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function nextLesson() {
+            const currentIndex = currentCourse.lessons.findIndex(l => l.id === currentLesson.id);
+            if (currentIndex < currentCourse.lessons.length - 1) {
+                const nextLessonItem = currentCourse.lessons[currentIndex + 1];
+                sessionStorage.setItem('currentCourseId', currentCourse.id);
+                sessionStorage.setItem('currentLessonId', nextLessonItem.id);
+                currentLesson = nextLessonItem;
+                displayLesson(currentCourse.id, nextLessonItem.id);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function markLessonComplete() {
+            markLessonAsCompleted(currentCourse.id, currentLesson.id);
+            displayLesson(currentCourse.id, currentLesson.id);
+            showNotification('Отлично! Урок отмечен как пройденный.');
+        }
+
+        function copyCode(btn) {
+            const code = btn.closest('.code-example').querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Скопировано!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        function getCompletedLessons(courseId) {
+            const progress = getProgress();
+            if (!progress[courseId]) return [];
+            return Object.keys(progress[courseId]).filter(lessonId => progress[courseId][lessonId].completed);
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+                z-index: 10000;
+                animation: slideInDown 0.3s ease-out;
+            `;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

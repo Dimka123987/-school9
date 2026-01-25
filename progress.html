@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ваш прогресс в изучении C++ на платформе CodePath Academy">
+    <title>Прогресс - CodePath Academy</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    
+    <!-- GSAP для продвинутых анимаций -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%236366f1'>C++</text></svg>">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <span class="brand-icon">C++</span>
+                    <span class="brand-text">CodePath Academy</span>
+                </div>
+                
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="courses.html" class="nav-link">Курсы</a></li>
+                    <li><a href="progress.html" class="nav-link">Прогресс</a></li>
+                    <li><a href="about.html" class="nav-link">О платформе</a></li>
+                </ul>
+                
+                <div class="navbar-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="hamburger" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Progress Page -->
+            <section class="page active" style="display: block !important;">
+                <div class="page-header">
+                    <h1>Ваш прогресс</h1>
+                    <p>Отслеживайте свое путешествие в изучении C++</p>
+                </div>
+
+                <div class="progress-dashboard">
+                    <div class="dashboard-card overall-progress">
+                        <h2>Общий прогресс</h2>
+                        <div class="progress-circle">
+                            <svg viewBox="0 0 100 100">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: var(--accent-primary); stop-opacity: 1;"/>
+                                        <stop offset="100%" style="stop-color: var(--accent-secondary); stop-opacity: 1;"/>
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="50" cy="50" r="45" class="bg-circle"></circle>
+                                <circle cx="50" cy="50" r="45" class="progress-circle-fill" id="overall-circle"></circle>
+                            </svg>
+                            <div class="progress-text-center">
+                                <div class="progress-percent" id="overall-percent">0%</div>
+                                <div class="progress-label">Завершено</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="level-progress" class="level-progress">
+                        <!-- Динамически заполняется -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CodePath Academy</h4>
+                    <p>Современная платформа для изучения C++</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Курсы</h4>
+                    <ul>
+                        <li><a href="courses.html">Все курсы</a></li>
+                        <li><a href="courses.html">Для начинающих</a></li>
+                        <li><a href="courses.html">Продвинутый уровень</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="about.html">О платформе</a></li>
+                        <li><a href="progress.html">Мой прогресс</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodePath Academy. Все права защищены. Made with ❤️ for C++ developers.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/app.js"></script>
+    <script src="src/js/themes.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/courses.js"></script>
+    <script src="src/js/animations.js"></script>
+    <script>
+        // Load progress on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCoursesData().then(() => {
+                renderProgressPage();
+            });
+        });
+
+        async function loadCoursesData() {
+            try {
+                const response = await fetch('src/data/courses.json');
+                window.courses = await response.json();
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+
+        function renderProgressPage() {
+            const totalPercent = getOverallProgress(window.courses.length);
+            updateProgressCircle(totalPercent);
+            
+            // Render level-wise progress
+            const levelProgress = document.getElementById('level-progress');
+            let html = '';
+            
+            const levels = ['beginner', 'intermediate', 'advanced'];
+            const levelLabels = {
+                beginner: 'Для начинающих',
+                intermediate: 'Средний уровень',
+                advanced: 'Продвинутый уровень'
+            };
+            
+            levels.forEach(level => {
+                const levelCourses = window.courses.filter(c => c.level === level);
+                const totalLessons = levelCourses.reduce((sum, c) => sum + c.lessons.length, 0);
+                const completedLessons = levelCourses.reduce((sum, c) => {
+                    return sum + getCompletedLessons(c.id).length;
+                }, 0);
+                
+                const percentage = totalLessons === 0 ? 0 : Math.round((completedLessons / totalLessons) * 100);
+                
+                html += `
+                    <div class="level-card">
+                        <div class="level-header">
+                            <span class="level-name">${levelLabels[level]}</span>
+                            <span class="badge badge-${level}">${level}</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%"></div>
+                        </div>
+                        <div class="level-stats">
+                            ${completedLessons} из ${totalLessons} уроков • ${percentage}%
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (levelProgress) {
+                levelProgress.innerHTML = html;
+            }
+        }
+
+        function getCompletedLessons(courseId) {
+            const progress = getProgress();
+            if (!progress[courseId]) return [];
+            return Object.keys(progress[courseId]).filter(lessonId => progress[courseId][lessonId].completed);
+        }
+
+        function updateProgressCircle(percentage) {
+            const circle = document.querySelector('.progress-circle-fill');
+            const percentText = document.getElementById('overall-percent');
+            
+            if (circle && percentText) {
+                const radius = 45;
+                const circumference = 2 * Math.PI * radius;
+                const offset = circumference - (percentage / 100) * circumference;
+                
+                circle.style.strokeDasharray = circumference;
+                circle.style.strokeDashoffset = offset;
+                percentText.textContent = percentage + '%';
+            }
+        }
+    </script>
+</body>
+</html>

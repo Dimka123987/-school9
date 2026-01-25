@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="О платформе CodePath Academy - место, где начинается ваша карьера в C++">
+    <title>О платформе - CodePath Academy</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    
+    <!-- GSAP для продвинутых анимаций -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%236366f1'>C++</text></svg>">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <span class="brand-icon">C++</span>
+                    <span class="brand-text">CodePath Academy</span>
+                </div>
+                
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="courses.html" class="nav-link">Курсы</a></li>
+                    <li><a href="progress.html" class="nav-link">Прогресс</a></li>
+                    <li><a href="about.html" class="nav-link">О платформе</a></li>
+                </ul>
+                
+                <div class="navbar-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="hamburger" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- About Page -->
+            <section class="page active" style="display: block !important;">
+                <div class="page-header">
+                    <h1>О платформе</h1>
+                    <p>CodePath Academy - место, где начинается ваша карьера в C++</p>
+                </div>
+
+                <div class="about-content">
+                    <div class="about-section">
+                        <h2>Почему CodePath Academy?</h2>
+                        <p>
+                            CodePath Academy - это современная образовательная платформа, созданная опытными разработчиками и преподавателями C++. 
+                            Мы верим, что каждый может научиться программировать, если получит правильное руководство и практику.
+                        </p>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>Для кого эта платформа?</h2>
+                        <ul class="feature-list">
+                            <li>👨‍💻 Для начинающих, которые хотят изучить программирование с нуля</li>
+                            <li>📚 Для студентов, дополняющих свое образование</li>
+                            <li>🚀 Для тех, кто хочет перейти на продвинутый уровень C++</li>
+                            <li>💼 Для профессионалов, расширяющих свои навыки</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>Наш подход</h2>
+                        <p>
+                            Мы создали платформу на основе годов опыта преподавания программирования. 
+                            Каждый урок разработан с учетом реальных потребностей разработчиков и лучших практик обучения.
+                        </p>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>Главные возможности</h2>
+                        <ul class="feature-list">
+                            <li>✅ 16+ полных уроков с реальным C++ кодом</li>
+                            <li>✅ 3 уровня сложности (начинающие, средний, продвинутый)</li>
+                            <li>✅ 50+ примеров кода с объяснениями</li>
+                            <li>✅ Отслеживание прогресса и статистика</li>
+                            <li>✅ Светлая и темная темы</li>
+                            <li>✅ Полная адаптивность (мобильный, планшет, ПК)</li>
+                            <li>✅ Быстрая навигация и гладкие анимации</li>
+                            <li>✅ Бесплатно и без регистрации</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>Структура курсов</h2>
+                        <p>
+                            Наша платформа предлагает три полных курса, разработанные с учетом современных стандартов C++:
+                        </p>
+                        <ul class="feature-list">
+                            <li><strong>C++ для начинающих</strong> - Основы синтаксиса, переменные, типы данных, условия и циклы</li>
+                            <li><strong>C++ Средний уровень</strong> - Функции, массивы, указатели, динамическая память</li>
+                            <li><strong>C++ Продвинутый уровень</strong> - ООП, классы, наследование, шаблоны, STL</li>
+                        </ul>
+                    </div>
+
+                    <div class="about-section">
+                        <h2>Технологии</h2>
+                        <p>
+                            CodePath Academy создана с использованием современных веб-технологий:
+                        </p>
+                        <ul class="feature-list">
+                            <li>HTML5 - Семантическая структура</li>
+                            <li>CSS3 - Современные стили и анимации</li>
+                            <li>JavaScript (Vanilla) - Логика и взаимодействие</li>
+                            <li>GSAP - Продвинутые анимации</li>
+                            <li>LocalStorage - Сохранение прогресса</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CodePath Academy</h4>
+                    <p>Современная платформа для изучения C++</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Курсы</h4>
+                    <ul>
+                        <li><a href="courses.html">Все курсы</a></li>
+                        <li><a href="courses.html">Для начинающих</a></li>
+                        <li><a href="courses.html">Продвинутый уровень</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="about.html">О платформе</a></li>
+                        <li><a href="progress.html">Мой прогресс</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodePath Academy. Все права защищены. Made with ❤️ for C++ developers.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/themes.js"></script>
+</body>
+</html>
