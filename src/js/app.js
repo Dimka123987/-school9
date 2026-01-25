@@ -632,16 +632,24 @@ function getDefaultCourses() {
  * Toggle mobile menu
  */
 function toggleMobileMenu() {
+    console.log('toggleMobileMenu called');
     const menu = document.querySelector('.navbar-menu');
     const hamburger = document.querySelector('.hamburger');
     
+    console.log('Menu element:', menu);
+    console.log('Hamburger element:', hamburger);
+    
     if (menu) {
         menu.classList.toggle('mobile-open');
+        console.log('Menu classes:', menu.className);
     }
     
     if (hamburger) {
         hamburger.classList.toggle('active');
+        console.log('Hamburger classes:', hamburger.className);
     }
+    
+    return false;
 }
 
 /**
@@ -660,11 +668,19 @@ function closeMobileMenu() {
     }
 }
 
-// Close mobile menu when clicking on a navigation link
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize mobile menu close on nav link click
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    initMobileMenu();
+}
+
+function initMobileMenu() {
     const navLinks = document.querySelectorAll('.nav-link');
+    console.log('Found nav links:', navLinks.length);
     navLinks.forEach(link => {
         link.addEventListener('click', closeMobileMenu);
     });
-});
+}
+
 
