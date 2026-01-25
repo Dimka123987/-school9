@@ -1,0 +1,120 @@
+[
+    {
+        "id": "test-cpp-basics",
+        "courseId": "cpp-basics",
+        "title": "Тестирование основ C++",
+        "description": "Проверьте свои знания основных концепций C++",
+        "difficulty": "beginner",
+        "tasks": [
+            {
+                "id": "task-1",
+                "title": "Hello World",
+                "description": "Напишите программу, которая выводит 'Hello, C++'",
+                "expectedOutput": "Hello, C++",
+                "template": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Ваш код здесь\n    \n    return 0;\n}",
+                "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << \"Hello, C++\" << endl;\n    return 0;\n}",
+                "hints": [
+                    "Используйте cout для вывода",
+                    "Не забудьте endl в конце",
+                    "Структура: #include, using namespace, main()"
+                ]
+            },
+            {
+                "id": "task-2",
+                "title": "Простые переменные",
+                "description": "Создайте переменные и выведите их сумму",
+                "expectedOutput": "15",
+                "template": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 5;\n    int b = 10;\n    // Выведите сумму\n    \n    return 0;\n}",
+                "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int a = 5;\n    int b = 10;\n    cout << a + b << endl;\n    return 0;\n}",
+                "hints": [
+                    "Используйте оператор +",
+                    "Выведите результат с cout",
+                    "a + b = 15"
+                ]
+            },
+            {
+                "id": "task-3",
+                "title": "Условие if-else",
+                "description": "Проверьте, четное ли число",
+                "expectedOutput": "6 четное",
+                "template": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n = 6;\n    // Проверьте четность и выведите результат\n    \n    return 0;\n}",
+                "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int n = 6;\n    if (n % 2 == 0) {\n        cout << n << \" четное\" << endl;\n    } else {\n        cout << n << \" нечетное\" << endl;\n    }\n    return 0;\n}",
+                "hints": [
+                    "Используйте оператор % для остатка деления",
+                    "Если n % 2 == 0, то число четное",
+                    "Используйте if-else"
+                ]
+            },
+            {
+                "id": "task-4",
+                "title": "Цикл for",
+                "description": "Выведите числа от 1 до 5",
+                "expectedOutput": "1 2 3 4 5",
+                "template": "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Выведите числа от 1 до 5 с помощью цикла for\n    \n    return 0;\n}",
+                "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    for (int i = 1; i <= 5; i++) {\n        cout << i << \" \";\n    }\n    cout << endl;\n    return 0;\n}",
+                "hints": [
+                    "Используйте for(int i = 1; i <= 5; i++)",
+                    "Выведите i в каждой итерации",
+                    "Добавьте пробел между числами"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "test-oop",
+        "courseId": "cpp-oop",
+        "title": "Тестирование ООП в C++",
+        "description": "Проверьте знания объектно-ориентированного программирования",
+        "difficulty": "intermediate",
+        "tasks": [
+            {
+                "id": "task-5",
+                "title": "Простой класс",
+                "description": "Создайте класс Person с полями name и age",
+                "expectedOutput": "John 30",
+                "template": "#include <iostream>\nusing namespace std;\n\nclass Person {\npublic:\n    // Добавьте члены класса\n    \n    void display() {\n        // Выведите name и age\n    }\n};\n\nint main() {\n    Person p;\n    p.name = \"John\";\n    p.age = 30;\n    p.display();\n    return 0;\n}",
+                "solution": "#include <iostream>\nusing namespace std;\n\nclass Person {\npublic:\n    string name;\n    int age;\n    \n    void display() {\n        cout << name << \" \" << age << endl;\n    }\n};\n\nint main() {\n    Person p;\n    p.name = \"John\";\n    p.age = 30;\n    p.display();\n    return 0;\n}",
+                "hints": [
+                    "Класс имеет данные и методы",
+                    "Используйте string для имени",
+                    "int для возраста"
+                ]
+            },
+            {
+                "id": "task-6",
+                "title": "Конструктор",
+                "description": "Добавьте конструктор к классу",
+                "expectedOutput": "Book: C++ Primer",
+                "template": "#include <iostream>\nusing namespace std;\n\nclass Book {\npublic:\n    string title;\n    \n    // Добавьте конструктор\n    \n    void display() {\n        cout << \"Book: \" << title << endl;\n    }\n};\n\nint main() {\n    Book b(\"C++ Primer\");\n    b.display();\n    return 0;\n}",
+                "solution": "#include <iostream>\nusing namespace std;\n\nclass Book {\npublic:\n    string title;\n    \n    Book(string t) {\n        title = t;\n    }\n    \n    void display() {\n        cout << \"Book: \" << title << endl;\n    }\n};\n\nint main() {\n    Book b(\"C++ Primer\");\n    b.display();\n    return 0;\n}",
+                "hints": [
+                    "Конструктор имеет имя класса",
+                    "Инициализирует члены класса",
+                    "Вызывается при создании объекта"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "test-stl",
+        "courseId": "cpp-stl",
+        "title": "Тестирование STL",
+        "description": "Проверьте знания Standard Template Library",
+        "difficulty": "intermediate",
+        "tasks": [
+            {
+                "id": "task-7",
+                "title": "Vector",
+                "description": "Создайте вектор и добавьте элементы",
+                "expectedOutput": "1 2 3",
+                "template": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> v;\n    // Добавьте числа 1, 2, 3\n    // Выведите их\n    \n    return 0;\n}",
+                "solution": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> v;\n    v.push_back(1);\n    v.push_back(2);\n    v.push_back(3);\n    \n    for (int x : v) {\n        cout << x << \" \";\n    }\n    cout << endl;\n    return 0;\n}",
+                "hints": [
+                    "Используйте push_back() для добавления",
+                    "Используйте range-based for для вывода",
+                    "#include <vector>"
+                ]
+            }
+        ]
+    }
+]

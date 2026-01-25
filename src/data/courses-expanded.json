@@ -1,0 +1,392 @@
+[
+    {
+        "id": "cpp-game-dev",
+        "title": "Разработка игр на C++",
+        "description": "Создавайте игры! Изучите основы игровой разработки с C++. Работа с графикой, физикой и игровыми циклами.",
+        "level": "advanced",
+        "icon": "🎮",
+        "lessons": [
+            {
+                "id": "lesson-game-1",
+                "title": "Основы игровых движков",
+                "duration": 30,
+                "sections": [
+                    {
+                        "title": "Что такое игровой движок?",
+                        "content": "Игровой движок - это набор инструментов и библиотек для создания игр. Он обеспечивает: рендеринг графики, обработку физики, управление ресурсами, обработку входных данных, звук и музыку. Популярные движки: Unreal Engine (C++), Unity (C#), Godot (C++). Мы будем использовать простые библиотеки для обучения."
+                    },
+                    {
+                        "title": "Игровой цикл",
+                        "content": "Каждая игра имеет цикл, повторяющийся ~60 раз в секунду: 1) Ввод - получение нажатий клавиш. 2) Логика - обновление позиций, проверка столкновений. 3) Отрисовка - вывод графики на экран. Цикл работает до тех пор, пока игра не завершится."
+                    },
+                    {
+                        "title": "Структура простого игрового приложения",
+                        "content": "",
+                        "code": "#include <iostream>\n#include <chrono>\nusing namespace std;\n\nclass Game {\nprivate:\n    bool running;\n    float deltaTime;\n    \npublic:\n    Game() : running(true), deltaTime(0.0f) {}\n    \n    void handleInput() {\n        // Обработка нажатий клавиш\n        cout << \"Input handled\" << endl;\n    }\n    \n    void update(float dt) {\n        // Обновление логики игры\n        cout << \"Game updated, dt: \" << dt << endl;\n    }\n    \n    void render() {\n        // Рисование кадра\n        cout << \"Frame rendered\" << endl;\n    }\n    \n    void run() {\n        auto lastTime = chrono::high_resolution_clock::now();\n        \n        while (running) {\n            auto currentTime = chrono::high_resolution_clock::now();\n            deltaTime = chrono::duration<float>(currentTime - lastTime).count();\n            lastTime = currentTime;\n            \n            handleInput();\n            update(deltaTime);\n            render();\n            \n            if (deltaTime > 1.0f) running = false;  // Завершить через 1 секунду\n        }\n    }\n};\n\nint main() {\n    Game game;\n    game.run();\n    return 0;\n}\n"
+                    },
+                    {
+                        "title": "Frame Rate и дельта время",
+                        "content": "Frame Rate - количество кадров в секунду (FPS). Стандартная скорость: 60 FPS = 16.67ms на кадр. Дельта время (dt) - время между кадрами. Используется для независимого от скорости обновления движения объектов. distance = speed * dt позволяет одинаковую скорость независимо от FPS."
+                    }
+                ],
+                "learned": [
+                    "Концепция игрового движка",
+                    "Игровой цикл",
+                    "Архитектура игры",
+                    "Frame Rate и дельта время",
+                    "Основная структура класса Game"
+                ]
+            },
+            {
+                "id": "lesson-game-2",
+                "title": "Графика и рисование",
+                "duration": 35,
+                "sections": [
+                    {
+                        "title": "2D графика в C++",
+                        "content": "Для 2D графики используют библиотеки: SDL2 - кроссплатформенная, подходит для игр. SFML - более высокоуровневая, удобнее. OpenGL - низкоуровневая, очень мощная. Raylib - простая и удобная для обучения. Для нашего курса используем концепции, работающие с любой библиотекой."
+                    },
+                    {
+                        "title": "Координатная система",
+                        "content": "В компьютерной графике: ось X идет влево-вправо (0 = левый край). ось Y идет сверху вниз (0 = верхний край). Позиция (100, 50) = 100 пиксели справа, 50 пиксели вниз от верхнего левого угла. Это отличается от математической системы, где Y растет вверх."
+                    },
+                    {
+                        "title": "Рисование примитивов",
+                        "content": "Прямоугольник (rect): DrawRectangle(x, y, width, height). Окружность (circle): DrawCircle(x, y, radius). Линия (line): DrawLine(x1, y1, x2, y2). Триугольник: DrawTriangle(x1, y1, x2, y2, x3, y3). Все примитивы имеют цвет и опциональную толщину."
+                    },
+                    {
+                        "title": "Цвета и слои",
+                        "content": "Цвет представляется в RGB: (255, 0, 0) = красный, (0, 255, 0) = зеленый, (0, 0, 255) = синий. Альфа канал (прозрачность): (255, 0, 0, 128) = полупрозрачный красный. Z-порядок (глубина): позже рисованные объекты появляются сверху. Для 2D достаточно порядка рисования."
+                    },
+                    {
+                        "title": "Спрайты и анимация",
+                        "content": "Спрайт - небольшое изображение (PNG, JPG). Анимация - быстрая смена спрайтов. Например: 8 спрайтов персонажа, меняем каждые 100ms - получается анимация хода. Используйте текстуры и UV координаты для отображения частей большого изображения."
+                    }
+                ],
+                "learned": [
+                    "Библиотеки для графики",
+                    "Координатная система",
+                    "Рисование примитивов",
+                    "Цвета и альфа-канал",
+                    "Спрайты и текстуры",
+                    "Основы анимации"
+                ]
+            },
+            {
+                "id": "lesson-game-3",
+                "title": "Физика и столкновения",
+                "duration": 32,
+                "sections": [
+                    {
+                        "title": "Основы физики в играх",
+                        "content": "Физика создает реалистичное поведение объектов. Основные концепции: Скорость - изменение позиции за единицу времени. Ускорение - изменение скорости. Гравитация - ускорение вниз (9.8 м/с² в реальной жизни). Трение - замедление движения. Импульс - мгновенное изменение скорости (столкновение)."
+                    },
+                    {
+                        "title": "Движение объектов",
+                        "content": "",
+                        "code": "#include <iostream>\n#include <cmath>\nusing namespace std;\n\nclass PhysicsObject {\npublic:\n    float x, y;           // позиция\n    float vx, vy;         // скорость\n    float ax, ay;         // ускорение\n    float mass;           // масса\n    \n    PhysicsObject(float x_, float y_, float mass_)\n        : x(x_), y(y_), vx(0), vy(0), ax(0), ay(0), mass(mass_) {}\n    \n    void applyForce(float fx, float fy) {\n        ax = fx / mass;   // a = F / m\n        ay = fy / mass;\n    }\n    \n    void update(float dt) {\n        // Обновляем скорость\n        vx += ax * dt;\n        vy += ay * dt;\n        \n        // Обновляем позицию\n        x += vx * dt;\n        y += vy * dt;\n        \n        // Гравитация\n        ay = 9.8f;  // вниз\n    }\n    \n    float getSpeed() const {\n        return sqrt(vx * vx + vy * vy);\n    }\n};\n\nint main() {\n    PhysicsObject ball(100, 100, 1.0f);\n    \n    // Прыжок (начальная скорость вверх)\n    ball.vy = -10;  // отрицательная = вверх\n    \n    for (int i = 0; i < 100; i++) {\n        ball.update(0.016f);  // 60 FPS\n        cout << \"y: \" << ball.y << \" vy: \" << ball.vy << endl;\n        \n        if (ball.y >= 100) break;  // Упал на землю\n    }\n    \n    return 0;\n}\n"
+                    },
+                    {
+                        "title": "Обнаружение столкновений",
+                        "content": "AABB (Axis-Aligned Bounding Box) - самый простой метод. Проверяем, пересекаются ли прямоугольники объектов. Круговые столкновения - проверяем расстояние между центрами < сумма радиусов. Pixel-perfect - сложный метод для точного пересечения пиксельных данных."
+                    },
+                    {
+                        "title": "Отскоки и упругие столкновения",
+                        "content": "При столкновении стены: отразить скорость (vx *= -1 или vy *= -1). Упругое столкновение между двумя объектами: обменять скорости (при одинаковой массе). С различной массой: используйте формулу сохранения импульса. Неупругое столкновение: объекты прилипают друг к другу."
+                    }
+                ],
+                "learned": [
+                    "Основы физики",
+                    "Скорость, ускорение, сила",
+                    "Гравитация и трение",
+                    "Обнаружение столкновений (AABB)",
+                    "Круговые столкновения",
+                    "Типы столкновений"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "cpp-web-dev",
+        "title": "Web разработка на C++ (Backend)",
+        "description": "Разработка веб-приложений. Создавайте REST API, работайте с БД, HTTP серверы.",
+        "level": "advanced",
+        "icon": "🌐",
+        "lessons": [
+            {
+                "id": "lesson-web-1",
+                "title": "Основы HTTP и REST API",
+                "duration": 28,
+                "sections": [
+                    {
+                        "title": "Что такое HTTP?",
+                        "content": "HTTP (HyperText Transfer Protocol) - протокол для передачи данных в интернете. Клиент отправляет запрос, сервер отправляет ответ. Методы: GET (получить данные), POST (создать), PUT (обновить), DELETE (удалить), PATCH (частичное обновление). Коды ответов: 200 (OK), 404 (Not Found), 500 (Server Error)."
+                    },
+                    {
+                        "title": "Что такое REST API?",
+                        "content": "REST (Representational State Transfer) - архитектурный стиль для веб-API. Ресурсы (объекты) идентифицируются URL. Методы HTTP определяют действие (CRUD). Пример: GET /api/users - получить всех пользователей. POST /api/users - создать нового пользователя. GET /api/users/123 - получить пользователя с ID 123."
+                    },
+                    {
+                        "title": "JSON - формат данных",
+                        "content": "JSON (JavaScript Object Notation) - стандарт для обмена данными. Пример: { \"name\": \"Alice\", \"age\": 25, \"email\": \"alice@example.com\" }. Массивы: { \"users\": [{ \"id\": 1, \"name\": \"Alice\" }, { \"id\": 2, \"name\": \"Bob\" }] }. Иерархия: вложенные объекты и массивы."
+                    },
+                    {
+                        "title": "Создание простого HTTP сервера",
+                        "content": "В C++ используют библиотеки: cpp-httplib - легкая и удобная. Boost.Asio - мощная, для сложных приложений. cpp-crow - похожа на Flask в Python. restbed - специализирована для REST. Для быстрого старта - cpp-httplib или cpp-crow."
+                    }
+                ],
+                "learned": [
+                    "Основы HTTP протокола",
+                    "REST архитектура",
+                    "CRUD операции",
+                    "JSON формат",
+                    "HTTP методы и коды",
+                    "Клиент-сервер модель"
+                ]
+            },
+            {
+                "id": "lesson-web-2",
+                "title": "Работа с базами данных",
+                "duration": 30,
+                "sections": [
+                    {
+                        "title": "Типы баз данных",
+                        "content": "Реляционные БД (SQL): MySQL, PostgreSQL, SQLite. Иерархические данные в таблицах. Используют язык SQL. NoSQL БД: MongoDB, Firebase. Гибкие, ненормализованные данные. Для веб-приложений часто используют MySQL или PostgreSQL."
+                    },
+                    {
+                        "title": "SQL основы",
+                        "content": "SELECT - выборка данных. INSERT - добавление записи. UPDATE - изменение. DELETE - удаление. WHERE - условие. JOIN - объединение таблиц. Примеры: SELECT * FROM users; - получить всех пользователей. SELECT name, email FROM users WHERE age > 18; - имена и почты взрослых."
+                    },
+                    {
+                        "title": "Подключение к БД из C++",
+                        "content": "Библиотеки: mysql-connector-c++ - для MySQL. libpq - для PostgreSQL. SQLite3 - для встроенной базы. Процесс: 1) Подключиться к серверу. 2) Выполнить запрос. 3) Обработать результаты. 4) Закрыть соединение. Важно: используйте подготовленные запросы (prepared statements) для защиты от SQL-инъекций."
+                    },
+                    {
+                        "title": "ORM (Object-Relational Mapping)",
+                        "content": "ORM - библиотеки, которые преобразуют объекты C++ в записи БД и обратно. Примеры: sqlpp11 - для C++. hiberate для Java. SQLAlchemy для Python. ORM упрощает работу с БД, но может быть медленнее чем сырой SQL."
+                    }
+                ],
+                "learned": [
+                    "Типы баз данных",
+                    "SQL язык",
+                    "CRUD операции в SQL",
+                    "Подключение из C++",
+                    "Безопасность (SQL инъекции)",
+                    "ORM библиотеки"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "cpp-systems-programming",
+        "title": "Системное программирование на C++",
+        "description": "Программирование на уровне операционной системы. Многопоточность, сетевое программирование, работа с файлами.",
+        "level": "advanced",
+        "icon": "⚙️",
+        "lessons": [
+            {
+                "id": "lesson-sys-1",
+                "title": "Работа с файлами",
+                "duration": 26,
+                "sections": [
+                    {
+                        "title": "Чтение и запись файлов",
+                        "content": "Основные потоки ввода-вывода: ifstream - чтение, ofstream - запись, fstream - чтение и запись. Открытие файла: ifstream file(\"data.txt\"); Проверка: if (!file) { cerr << \"Error opening file\" << endl; }. Чтение: string line; while (getline(file, line)) { cout << line << endl; }."
+                    },
+                    {
+                        "title": "Работа с текстовыми файлами",
+                        "content": "",
+                        "code": "#include <iostream>\n#include <fstream>\n#include <string>\nusing namespace std;\n\nint main() {\n    // Запись в файл\n    ofstream outFile(\"output.txt\");\n    if (!outFile) {\n        cerr << \"Cannot open output file\" << endl;\n        return 1;\n    }\n    \n    outFile << \"Hello, World!\" << endl;\n    outFile << \"Line 2\" << endl;\n    outFile << \"Line 3\" << endl;\n    outFile.close();\n    \n    // Чтение из файла\n    ifstream inFile(\"output.txt\");\n    if (!inFile) {\n        cerr << \"Cannot open input file\" << endl;\n        return 1;\n    }\n    \n    string line;\n    while (getline(inFile, line)) {\n        cout << \"Read: \" << line << endl;\n    }\n    inFile.close();\n    \n    return 0;\n}\n"
+                    },
+                    {
+                        "title": "Бинарные файлы",
+                        "content": "Бинарные данные: числа, структуры напрямую без текстового формата. Открытие: ios::binary флаг. Запись: file.write(reinterpret_cast<char*>(&data), sizeof(data));. Чтение: file.read(reinterpret_cast<char*>(&data), sizeof(data));. Это быстрее чем текст для больших объемов."
+                    },
+                    {
+                        "title": "Работа с директориями",
+                        "content": "Требуется библиотека <filesystem> (C++17). filesystem::create_directory(\"folder\"); - создать папку. filesystem::remove(\"file.txt\"); - удалить файл. filesystem::is_directory(path); - проверить, это папка? filesystem::directory_iterator(path); - итератор по файлам в папке."
+                    }
+                ],
+                "learned": [
+                    "Потоки ввода-вывода",
+                    "Чтение текстовых файлов",
+                    "Запись в текстовые файлы",
+                    "Бинарные файлы",
+                    "Работа с директориями",
+                    "Обработка ошибок при работе с файлами"
+                ]
+            },
+            {
+                "id": "lesson-sys-2",
+                "title": "Многопоточность и параллелизм",
+                "duration": 32,
+                "sections": [
+                    {
+                        "title": "Что такое потоки (Threads)?",
+                        "content": "Поток - независимый путь выполнения кода в программе. Многопоточность позволяет выполнять несколько задач одновременно. Пример: один поток загружает файл, другой обновляет UI, третий обрабатывает данные. Используйте многопоточность для: длительных операций, параллельной обработки, отзывчивого UI."
+                    },
+                    {
+                        "title": "Создание потоков",
+                        "content": "",
+                        "code": "#include <iostream>\n#include <thread>\n#include <chrono>\nusing namespace std;\n\nvoid workerFunction(int id) {\n    for (int i = 0; i < 5; i++) {\n        cout << \"Thread \" << id << \" iteration \" << i << endl;\n        this_thread::sleep_for(chrono::milliseconds(100));\n    }\n}\n\nint main() {\n    // Создание потоков\n    thread t1(workerFunction, 1);\n    thread t2(workerFunction, 2);\n    thread t3(workerFunction, 3);\n    \n    // Ожидание завершения\n    t1.join();\n    t2.join();\n    t3.join();\n    \n    cout << \"All threads finished\" << endl;\n    \n    return 0;\n}\n"
+                    },
+                    {
+                        "title": "Синхронизация потоков (Mutex)",
+                        "content": "Mutex (взаимное исключение) предотвращает одновременный доступ нескольких потоков к одному ресурсу. lock_guard<mutex> lock(mtx); - захватить блокировку (автоматически освобождается). Без синхронизации возможны race conditions - ошибки из-за неопределенного порядка доступа."
+                    },
+                    {
+                        "title": "Race Conditions и Deadlocks",
+                        "content": "Race Condition: несколько потоков меняют одну переменную без синхронизации. Решение: mutex. Deadlock: поток1 ждет поток2, поток2 ждет поток1. Избегайте: всегда захватывайте блокировки в одинаковом порядке. Используйте lock_guard и unique_lock для автоматического освобождения."
+                    }
+                ],
+                "learned": [
+                    "Концепция потоков",
+                    "Создание потоков",
+                    "Функции потоков",
+                    "Синхронизация с Mutex",
+                    "Race Conditions",
+                    "Deadlocks и их избежание",
+                    "Практические примеры"
+                ]
+            },
+            {
+                "id": "lesson-sys-3",
+                "title": "Сетевое программирование",
+                "duration": 30,
+                "sections": [
+                    {
+                        "title": "Основы сетей",
+                        "content": "IP адрес: идентификатор компьютера в сети (192.168.1.1). Порт: номер сервиса на компьютере (0-65535). HTTP обычно использует порт 80, HTTPS - 443, SSH - 22. Socket - конечная точка сетевого соединения. TCP - надежная доставка, UDP - быстрая, но ненадежная."
+                    },
+                    {
+                        "title": "TCP сокеты (сервер и клиент)",
+                        "content": "Сервер: 1) Создать socket. 2) Bind к портку. 3) Listen на соединения. 4) Accept соединение. 5) Receive/Send данные. Клиент: 1) Создать socket. 2) Connect к серверу. 3) Send/Receive данные. Библиотеки: Winsock (Windows), BSD sockets (Linux/Mac), asio/boost для кроссплатформы."
+                    },
+                    {
+                        "title": "UDP сокеты",
+                        "content": "UDP (User Datagram Protocol) - без соединения, быстрее чем TCP. Используется для: игр (низкая задержка важнее надежности), потокового видео, DNS. Меньше накладных расходов, но пакеты могут теряться. UDP быстрее подходит для реал-тайм приложений."
+                    }
+                ],
+                "learned": [
+                    "IP адреса и порты",
+                    "Основы TCP/UDP",
+                    "Создание сокетов",
+                    "Серверное программирование",
+                    "Клиентское программирование",
+                    "Асинхронное программирование"
+                ]
+            }
+        ]
+    },
+    {
+        "id": "cpp-data-structures",
+        "title": "Структуры данных и алгоритмы",
+        "description": "Глубокое погружение в структуры данных. Списки, деревья, графы, сортировка, поиск.",
+        "level": "advanced",
+        "icon": "📊",
+        "lessons": [
+            {
+                "id": "lesson-ds-1",
+                "title": "Связные списки",
+                "duration": 28,
+                "sections": [
+                    {
+                        "title": "Что такое связный список?",
+                        "content": "Связный список - структура данных из узлов, соединенных указателями. Каждый узел содержит: данные и указатель на следующий узел. Преимущества: динамический размер, быстрое вставление/удаление в известной позиции. Недостатки: медленный доступ по индексу, требует больше памяти."
+                    },
+                    {
+                        "title": "Реализация связного списка",
+                        "content": "",
+                        "code": "#include <iostream>\nusing namespace std;\n\nstruct Node {\n    int data;\n    Node* next;\n    \n    Node(int val) : data(val), next(nullptr) {}\n};\n\nclass LinkedList {\nprivate:\n    Node* head;\n    \npublic:\n    LinkedList() : head(nullptr) {}\n    \n    void insert(int val) {\n        Node* newNode = new Node(val);\n        if (!head) {\n            head = newNode;\n            return;\n        }\n        \n        Node* current = head;\n        while (current->next) {\n            current = current->next;\n        }\n        current->next = newNode;\n    }\n    \n    void display() const {\n        Node* current = head;\n        while (current) {\n            cout << current->data << \" -> \";\n            current = current->next;\n        }\n        cout << \"nullptr\" << endl;\n    }\n    \n    void remove(int val) {\n        if (!head) return;\n        \n        if (head->data == val) {\n            Node* temp = head;\n            head = head->next;\n            delete temp;\n            return;\n        }\n        \n        Node* current = head;\n        while (current->next && current->next->data != val) {\n            current = current->next;\n        }\n        \n        if (current->next) {\n            Node* temp = current->next;\n            current->next = temp->next;\n            delete temp;\n        }\n    }\n};\n\nint main() {\n    LinkedList list;\n    list.insert(10);\n    list.insert(20);\n    list.insert(30);\n    \n    list.display();  // 10 -> 20 -> 30 -> nullptr\n    \n    list.remove(20);\n    list.display();  // 10 -> 30 -> nullptr\n    \n    return 0;\n}\n"
+                    },
+                    {
+                        "title": "Двусвязный список",
+                        "content": "Двусвязный список: каждый узел имеет указатели и на предыдущий, и на следующий узел. struct Node { int data; Node* next; Node* prev; }; Преимущества: движение в обе стороны. Недостатки: больше памяти, сложнее реализация."
+                    },
+                    {
+                        "title": "Применение списков",
+                        "content": "Stack - используется связный список для быстрого добавления/удаления с конца. Queue - аналогично для FIFO. Кэширование - двусвязный список для LRU (Least Recently Used) кэша. Undo/Redo - история действий как список."
+                    }
+                ],
+                "learned": [
+                    "Структура связного списка",
+                    "Узел (Node) и указатели",
+                    "Операции вставки и удаления",
+                    "Обход списка",
+                    "Двусвязный список",
+                    "Применение в реальных задачах"
+                ]
+            },
+            {
+                "id": "lesson-ds-2",
+                "title": "Деревья и бинарные деревья поиска",
+                "duration": 32,
+                "sections": [
+                    {
+                        "title": "Что такое дерево?",
+                        "content": "Дерево - иерархическая структура данных с узлом-корнем и поддеревьями. Узел без детей - лист. Высота дерева - максимальное количество уровней. Бинарное дерево - каждый узел имеет максимум 2 детей (левый и правый). Полезны для: файловые системы, парсеры, базы данных."
+                    },
+                    {
+                        "title": "Бинарное дерево поиска (BST)",
+                        "content": "BST - бинарное дерево, где: левое поддерево < узел < правое поддерево. Позволяет быстрый поиск O(log n) в сбалансированном дереве. Вставка, удаление, поиск - O(log n) в среднем. Худший случай - O(n) если дерево несбалансировано (как список)."
+                    },
+                    {
+                        "title": "Реализация BST",
+                        "content": "",
+                        "code": "#include <iostream>\nusing namespace std;\n\nstruct TreeNode {\n    int data;\n    TreeNode* left;\n    TreeNode* right;\n    \n    TreeNode(int val) : data(val), left(nullptr), right(nullptr) {}\n};\n\nclass BST {\nprivate:\n    TreeNode* root;\n    \n    TreeNode* insertHelper(TreeNode* node, int val) {\n        if (!node) return new TreeNode(val);\n        \n        if (val < node->data) {\n            node->left = insertHelper(node->left, val);\n        } else if (val > node->data) {\n            node->right = insertHelper(node->right, val);\n        }\n        return node;\n    }\n    \n    void inorderHelper(TreeNode* node) const {\n        if (!node) return;\n        inorderHelper(node->left);\n        cout << node->data << \" \";\n        inorderHelper(node->right);\n    }\n    \npublic:\n    BST() : root(nullptr) {}\n    \n    void insert(int val) {\n        root = insertHelper(root, val);\n    }\n    \n    void inorder() const {\n        inorderHelper(root);\n        cout << endl;\n    }\n};\n\nint main() {\n    BST bst;\n    bst.insert(50);\n    bst.insert(30);\n    bst.insert(70);\n    bst.insert(20);\n    bst.insert(40);\n    bst.insert(60);\n    bst.insert(80);\n    \n    bst.inorder();  // 20 30 40 50 60 70 80\n    \n    return 0;\n}\n"
+                    },
+                    {
+                        "title": "Обход дерева",
+                        "content": "Inorder (левый-узел-правый) - отсортированный порядок для BST. Preorder (узел-левый-правый) - для копирования дерева. Postorder (левый-правый-узел) - для удаления дерева. Level-order (по уровням) - требует очередь."
+                    }
+                ],
+                "learned": [
+                    "Структура дерева",
+                    "Бинарное дерево",
+                    "BST свойства",
+                    "Вставка в BST",
+                    "Поиск в BST",
+                    "Обходы дерева (inorder, preorder, postorder)",
+                    "Удаление из BST"
+                ]
+            },
+            {
+                "id": "lesson-ds-3",
+                "title": "Графы и алгоритмы обхода",
+                "duration": 30,
+                "sections": [
+                    {
+                        "title": "Что такое граф?",
+                        "content": "Граф - набор вершин (узлов), соединенных ребрами (линиями). Ориентированный граф - ребра имеют направление. Неориентированный граф - ребра без направления. Взвешенный граф - ребра имеют веса (расстояние, стоимость). Используются для: дороги между городами, социальные сети, компиляторы."
+                    },
+                    {
+                        "title": "Представление графа",
+                        "content": "Матрица смежности - двумерный массив, где matrix[i][j] = вес ребра от i к j. Быстро проверить ребро O(1), но O(V²) памяти. Список смежности - каждая вершина имеет список соседей. Экономит память O(V+E), медленнее проверка O(V)."
+                    },
+                    {
+                        "title": "DFS (Depth-First Search)",
+                        "content": "",
+                        "code": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nclass Graph {\nprivate:\n    int V;\n    vector<vector<int>> adj;\n    \n    void dfsHelper(int v, vector<bool>& visited) {\n        visited[v] = true;\n        cout << v << \" \";\n        \n        for (int u : adj[v]) {\n            if (!visited[u]) {\n                dfsHelper(u, visited);\n            }\n        }\n    }\n    \npublic:\n    Graph(int V) : V(V), adj(V) {}\n    \n    void addEdge(int u, int v) {\n        adj[u].push_back(v);\n        adj[v].push_back(u);\n    }\n    \n    void dfs(int start) {\n        vector<bool> visited(V, false);\n        dfsHelper(start, visited);\n        cout << endl;\n    }\n};\n\nint main() {\n    Graph g(5);\n    g.addEdge(0, 1);\n    g.addEdge(0, 2);\n    g.addEdge(1, 3);\n    g.addEdge(2, 4);\n    \n    g.dfs(0);  // 0 1 3 2 4\n    \n    return 0;\n}\n"
+                    },
+                    {
+                        "title": "BFS (Breadth-First Search)",
+                        "content": "BFS - обход в ширину, использует очередь. Посещает все соседи текущей вершины перед тем как перейти дальше. Находит кратчайший путь в невзвешенном графе. Используется для: поиск кратчайшего пути, проверка связности, уровни в дереве."
+                    },
+                    {
+                        "title": "Алгоритмы поиска пути",
+                        "content": "Dijkstra - поиск кратчайшего пути во взвешенном графе без отрицательных весов. O((V+E)logV) с приоритетной очередью. Bellman-Ford - поиск кратчайшего пути с отрицательными весами. O(VE). A* - эвристический алгоритм для более быстрого поиска. Используется в навигации и играх."
+                    }
+                ],
+                "learned": [
+                    "Структура графа",
+                    "Ориентированные и неориентированные графы",
+                    "Матрица смежности и список смежности",
+                    "DFS алгоритм",
+                    "BFS алгоритм",
+                    "Поиск кратчайшего пути",
+                    "Практические применения"
+                ]
+            }
+        ]
+    }
+]
