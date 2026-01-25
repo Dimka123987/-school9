@@ -627,3 +627,44 @@ function getDefaultCourses() {
         }
     ];
 }
+
+/**
+ * Toggle mobile menu
+ */
+function toggleMobileMenu() {
+    const menu = document.querySelector('.navbar-menu');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (menu) {
+        menu.classList.toggle('mobile-open');
+    }
+    
+    if (hamburger) {
+        hamburger.classList.toggle('active');
+    }
+}
+
+/**
+ * Close mobile menu when clicking on a link
+ */
+function closeMobileMenu() {
+    const menu = document.querySelector('.navbar-menu');
+    const hamburger = document.querySelector('.hamburger');
+    
+    if (menu && menu.classList.contains('mobile-open')) {
+        menu.classList.remove('mobile-open');
+    }
+    
+    if (hamburger && hamburger.classList.contains('active')) {
+        hamburger.classList.remove('active');
+    }
+}
+
+// Close mobile menu when clicking on a navigation link
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+    });
+});
+
