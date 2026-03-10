@@ -118,10 +118,30 @@
 /* Glow animation */
 @keyframes glow {
     0%, 100% {
-        box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
+        box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
     }
     50% {
-        box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+    }
+}
+
+/* Gold glow animation */
+@keyframes goldGlow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(244, 208, 63, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(244, 208, 63, 0.5);
+    }
+}
+
+/* Smooth page fade-in */
+@keyframes pageIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }
 
