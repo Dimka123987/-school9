@@ -535,6 +535,17 @@ input:focus, textarea:focus, select:focus {
     font-size: var(--text-lg);
 }
 
+/* ===== Featured Courses Section ===== */
+.featured-courses-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-4xl) var(--space-lg);
+}
+
+.featured-courses-section .section-header {
+    margin-bottom: var(--space-4xl);
+}
+
 /* ===== Steps Grid ===== */
 .steps-grid {
     display: grid;

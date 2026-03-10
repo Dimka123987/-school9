@@ -156,6 +156,18 @@ int main() {
                         <div class="stat-label">Бесплатно</div>
                     </div>
                 </section>
+
+                <!-- Featured Courses Section -->
+                <section class="featured-courses-section">
+                    <div class="section-header">
+                        <h2>Популярные курсы</h2>
+                        <p>Начните с одного из наших структурированных курсов</p>
+                    </div>
+                    
+                    <div class="courses-grid" id="featured-courses">
+                        <!-- Courses will be loaded here -->
+                    </div>
+                </section>
             </section>
 
 
@@ -194,6 +206,8 @@ int main() {
     <script src="src/js/themes.js"></script>
     <script src="src/js/animations.js"></script>
     <script>
+        let courses = [];
+
         function scrollToSection(sectionId) {
             const element = document.getElementById(sectionId);
             if (element) {
@@ -221,9 +235,120 @@ int main() {
             if (heroFeatures) heroFeatures.style.animation = 'slideUp 0.8s ease-out 0.4s forwards';
             if (heroButtons) heroButtons.style.animation = 'slideUp 0.8s ease-out 0.5s forwards';
             if (heroCode) heroCode.style.animation = 'slideInRight 0.8s ease-out 0.6s forwards';
+
+            // Load and display featured courses
+            loadFeaturedCourses();
         });
+
+        async function loadFeaturedCourses() {
+            try {
+                const response = await fetch('src/data/courses.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                courses = await response.json();
+                console.log('Loaded courses:', courses.length);
+                displayFeaturedCourses();
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+
+        function displayFeaturedCourses() {
+            const grid = document.getElementById('featured-courses');
+            if (!grid || courses.length === 0) {
+                console.warn('Grid not found or courses empty');
+                return;
+            }
+
+            const levelLabels = {
+                beginner: 'Для начинающих',
+                intermediate: 'Средний уровень',
+                advanced: 'Продвинутый уровень'
+            };
+
+            // Show only first 3 courses
+            const featuredCourses = courses.slice(0, 3);
+            
+            let html = '';
+            featuredCourses.forEach((course, index) => {
+                const progress = getLocalProgress(course.id, course.lessons.length);
+                
+                html += `
+                    <div class="course-card" onclick="openCourseFromHome('${course.id}')" style="cursor: pointer;">
+                        <div class="course-header">
+                            <span class="course-icon">${course.icon}</span>
+                            <span class="course-level">${levelLabels[course.level]}</span>
+                        </div>
+                        <div class="course-body">
+                            <h3 class="course-title">${course.title}</h3>
+                            <p class="course-description">${course.description}</p>
+                            <div class="course-stats">
+                                <div class="course-stat">
+                                    <div class="course-stat-number">${course.lessons.length}</div>
+                                    <div class="course-stat-label">Уроков</div>
+                                </div>
+                                <div class="course-stat">
+                                    <div class="course-stat-number">${progress.completed}</div>
+                                    <div class="course-stat-label">Завершено</div>
+                                </div>
+                                <div class="course-stat">
+                                    <div class="course-stat-number">${progress.percentage}%</div>
+                                    <div class="course-stat-label">Прогресс</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="course-button">
+                            ${progress.completed === course.lessons.length ? '✓ Завершено' : 'Начать'}
+                        </button>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
+
+            // Animate cards
+            const cards = grid.querySelectorAll('.course-card');
+            cards.forEach((card, index) => {
+                card.style.animation = `slideUp 0.6s ease-out forwards`;
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        }
+
+        function getLocalProgress(courseId, totalLessons) {
+            const completed = JSON.parse(localStorage.getItem(`course_${courseId}`) || '[]').length;
+            const percentage = totalLessons === 0 ? 0 : Math.round((completed / totalLessons) * 100);
+            return { completed, percentage };
+        }
+
+        function openCourseFromHome(courseId) {
+            console.log('Opening course from home:', courseId);
+            
+            if (!courses || courses.length === 0) {
+                console.error('Courses not loaded yet');
+                loadFeaturedCourses().then(() => {
+                    goToCourseLesson(courseId);
+                });
+                return;
+            }
+
+            goToCourseLesson(courseId);
+        }
+
+        function goToCourseLesson(courseId) {
+            const course = courses.find(c => c.id === courseId);
+            console.log('Found course:', course);
+            
+            if (course && course.lessons && course.lessons.length > 0) {
+                console.log('Navigating to first lesson:', course.lessons[0].id);
+                sessionStorage.setItem('currentCourseId', courseId);
+                sessionStorage.setItem('currentLessonId', course.lessons[0].id);
+                window.location.href = 'lesson.html';
+            } else {
+                console.error('Course not found or has no lessons');
+            }
+        }
     </script>
-    
     <!-- Main Application Scripts -->
     <script src="src/js/themes.js"></script>
     <script src="src/js/storage.js"></script>
