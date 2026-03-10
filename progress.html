@@ -116,30 +116,45 @@
     </div>
 
     <!-- Scripts -->
-    <script src="src/js/app.js"></script>
     <script src="src/js/themes.js"></script>
+    <script src="src/js/app.js"></script>
     <script src="src/js/storage.js"></script>
     <script src="src/js/courses.js"></script>
     <script src="src/js/animations.js"></script>
     <script>
+        let courses = [];
+        
         // Load progress on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadCoursesData().then(() => {
                 renderProgressPage();
+            }).catch(error => {
+                console.error('Failed to load progress:', error);
             });
         });
 
         async function loadCoursesData() {
             try {
                 const response = await fetch('src/data/courses.json');
-                window.courses = await response.json();
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                courses = await response.json();
+                console.log('Loaded courses:', courses.length);
+                return courses;
             } catch (error) {
                 console.error('Error loading courses:', error);
+                throw error;
             }
         }
 
         function renderProgressPage() {
-            const totalPercent = getOverallProgress(window.courses.length);
+            if (!courses || courses.length === 0) {
+                console.error('Courses not loaded');
+                return;
+            }
+            
+            const totalPercent = getOverallProgress(courses.length);
             updateProgressCircle(totalPercent);
             
             // Render level-wise progress
@@ -154,7 +169,7 @@
             };
             
             levels.forEach(level => {
-                const levelCourses = window.courses.filter(c => c.level === level);
+                const levelCourses = courses.filter(c => c.level === level);
                 const totalLessons = levelCourses.reduce((sum, c) => sum + c.lessons.length, 0);
                 const completedLessons = levelCourses.reduce((sum, c) => {
                     return sum + getCompletedLessons(c.id).length;

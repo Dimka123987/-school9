@@ -100,7 +100,6 @@
         </footer>
     </div>
 
-    <!-- Scripts -->
     <script src="src/js/themes.js"></script>
     <script src="src/js/app.js"></script>
     <script src="src/js/storage.js"></script>
@@ -112,21 +111,32 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadCoursesData().then(() => {
                 renderCoursesPage();
+            }).catch(error => {
+                console.error('Failed to load courses:', error);
             });
         });
 
         async function loadCoursesData() {
             try {
                 const response = await fetch('src/data/courses.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 courses = await response.json();
+                console.log('Loaded courses:', courses.length);
+                return courses;
             } catch (error) {
                 console.error('Error loading courses:', error);
+                throw error;
             }
         }
 
         function renderCoursesPage() {
             const grid = document.getElementById('courses-grid');
-            if (!grid || !courses.length) return;
+            if (!grid || !courses.length) {
+                console.warn('Grid not found or courses empty');
+                return;
+            }
             
             let html = '';
             
@@ -183,11 +193,31 @@
         }
 
         function openCourse(courseId) {
+            console.log('Opening course:', courseId);
+            console.log('Available courses:', courses.length);
+            
+            if (!courses || courses.length === 0) {
+                console.error('Courses not loaded yet');
+                loadCoursesData().then(() => {
+                    goToCourse(courseId);
+                });
+                return;
+            }
+            
+            goToCourse(courseId);
+        }
+
+        function goToCourse(courseId) {
             const course = courses.find(c => c.id === courseId);
-            if (course && course.lessons.length) {
+            console.log('Found course:', course);
+            
+            if (course && course.lessons && course.lessons.length > 0) {
+                console.log('Navigating to first lesson:', course.lessons[0].id);
                 sessionStorage.setItem('currentCourseId', courseId);
                 sessionStorage.setItem('currentLessonId', course.lessons[0].id);
                 window.location.href = 'lesson.html';
+            } else {
+                console.error('Course not found or has no lessons');
             }
         }
 

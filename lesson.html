@@ -155,26 +155,46 @@
                 const courseId = sessionStorage.getItem('currentCourseId');
                 const lessonId = sessionStorage.getItem('currentLessonId');
                 
-                if (courseId && lessonId) {
+                console.log('Loaded courses:', courses.length);
+                console.log('CourseId:', courseId, 'LessonId:', lessonId);
+                
+                if (courseId && lessonId && courses.length > 0) {
                     currentCourse = courses.find(c => c.id === courseId);
+                    console.log('Found course:', currentCourse ? currentCourse.title : 'NOT FOUND');
+                    
                     if (currentCourse) {
                         currentLesson = currentCourse.lessons.find(l => l.id === lessonId);
+                        console.log('Found lesson:', currentLesson ? currentLesson.title : 'NOT FOUND');
+                        
                         if (currentLesson) {
                             displayLesson(courseId, lessonId);
                             updateProgressCircle();
+                        } else {
+                            console.error('Lesson not found');
                         }
+                    } else {
+                        console.error('Course not found');
                     }
+                } else {
+                    console.error('Missing course or lesson ID');
                 }
+            }).catch(error => {
+                console.error('Failed to load:', error);
             });
         });
 
         async function loadCoursesData() {
             try {
                 const response = await fetch('src/data/courses.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 courses = await response.json();
-                console.log('Loaded courses:', courses.length);
+                console.log('Loaded courses from JSON:', courses.length);
+                return courses;
             } catch (error) {
                 console.error('Error loading courses:', error);
+                throw error;
             }
         }
 
