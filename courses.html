@@ -111,6 +111,13 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadCoursesData().then(() => {
                 renderCoursesPage();
+                
+                // Check for query parameters and apply filter
+                const urlParams = new URLSearchParams(window.location.search);
+                const levelFilter = urlParams.get('level');
+                if (levelFilter) {
+                    applyLevelFilter(levelFilter);
+                }
             }).catch(error => {
                 console.error('Failed to load courses:', error);
             });
@@ -198,23 +205,33 @@
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', () => {
                     const level = btn.dataset.level;
-                    
-                    // Update active button
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    
-                    // Filter courses
-                    const cards = document.querySelectorAll('.course-card');
-                    cards.forEach(card => {
-                        if (level === 'all') {
-                            card.style.display = '';
-                        } else {
-                            const courseId = card.getAttribute('onclick').match(/'([^']+)'/)[1];
-                            const course = courses.find(c => c.id === courseId);
-                            card.style.display = course.level === level ? '' : 'none';
-                        }
-                    });
+                    applyLevelFilter(level);
                 });
+            });
+        }
+
+        function applyLevelFilter(level) {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            // Update active button
+            filterBtns.forEach(b => {
+                if (b.dataset.level === level) {
+                    b.classList.add('active');
+                } else {
+                    b.classList.remove('active');
+                }
+            });
+            
+            // Filter courses
+            const cards = document.querySelectorAll('.course-card');
+            cards.forEach(card => {
+                if (level === 'all') {
+                    card.style.display = '';
+                } else {
+                    const courseId = card.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    const course = courses.find(c => c.id === courseId);
+                    card.style.display = course.level === level ? '' : 'none';
+                }
             });
         }
 
