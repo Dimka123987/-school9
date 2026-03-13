@@ -10,6 +10,79 @@ let courses = [];
 let lessonStartTime = null;
 
 /**
+ * Global function to open a course (works on all pages)
+ * This function navigates to the lesson page with the first lesson of the course
+ */
+function openCourse(courseId) {
+    console.log('openCourse called with courseId:', courseId);
+    
+    // Try to find in various locations
+    let coursesList = null;
+    
+    // 1. Check if courses are already loaded globally
+    if (window.courses && window.courses.length > 0) {
+        console.log('Found courses in window.courses');
+        coursesList = window.courses;
+    } else if (typeof courses !== 'undefined' && courses.length > 0) {
+        console.log('Found courses in local variable');
+        coursesList = courses;
+    } else {
+        console.log('Courses not loaded, attempting to load...');
+        loadCoursesForOpen(courseId);
+        return;
+    }
+    
+    // Find the course
+    const course = coursesList.find(c => c.id === courseId);
+    console.log('Found course:', course ? course.title : 'NOT FOUND');
+    
+    if (!course) {
+        console.error('Course not found with id:', courseId);
+        return;
+    }
+    
+    if (!course.lessons || course.lessons.length === 0) {
+        console.error('Course has no lessons');
+        return;
+    }
+    
+    // Navigate to lesson page
+    console.log('Navigating to lesson page with course:', courseId, 'and lesson:', course.lessons[0].id);
+    sessionStorage.setItem('currentCourseId', courseId);
+    sessionStorage.setItem('currentLessonId', course.lessons[0].id);
+    window.location.href = 'lesson.html';
+}
+
+/**
+ * Load courses and then open the specified course
+ */
+async function loadCoursesForOpen(courseId) {
+    try {
+        console.log('Loading courses from JSON...');
+        const response = await fetch('src/data/courses.json');
+        if (!response.ok) throw new Error('Failed to load courses');
+        
+        const loadedCourses = await response.json();
+        window.courses = loadedCourses;
+        
+        const course = loadedCourses.find(c => c.id === courseId);
+        console.log('After loading, found course:', course ? course.title : 'NOT FOUND');
+        
+        if (!course || !course.lessons || course.lessons.length === 0) {
+            console.error('Course not found or has no lessons after loading');
+            return;
+        }
+        
+        console.log('Navigating to lesson page');
+        sessionStorage.setItem('currentCourseId', courseId);
+        sessionStorage.setItem('currentLessonId', course.lessons[0].id);
+        window.location.href = 'lesson.html';
+    } catch (error) {
+        console.error('Error loading courses:', error);
+    }
+}
+
+/**
  * Initialize the application
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -27,10 +100,12 @@ async function loadCoursesData() {
     try {
         const response = await fetch('src/data/courses.json');
         courses = await response.json();
+        window.courses = courses; // Also store in window for global access
         console.log('Loaded courses:', courses.length);
     } catch (error) {
         console.error('Error loading courses:', error);
         courses = getDefaultCourses();
+        window.courses = courses;
     }
 }
 
@@ -259,9 +334,10 @@ function renderAboutPage() {
 }
 
 /**
- * Open a course (display lessons)
+ * Open a course in SPA mode (display lessons on same page)
+ * Used only in single-page application context
  */
-function openCourse(courseId) {
+function openCourseSPA(courseId) {
     const course = courses.find(c => c.id === courseId);
     if (!course || !course.lessons.length) return;
     

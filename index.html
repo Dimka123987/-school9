@@ -275,7 +275,7 @@ int main() {
                 const progress = getLocalProgress(course.id, course.lessons.length);
                 
                 html += `
-                    <div class="course-card" onclick="openCourseFromHome('${course.id}')" style="cursor: pointer;">
+                    <div class="course-card" onclick="openCourse('${course.id}')" style="cursor: pointer;">
                         <div class="course-header">
                             <span class="course-icon">${course.icon}</span>
                             <span class="course-level">${levelLabels[course.level]}</span>
@@ -319,34 +319,6 @@ int main() {
             const completed = JSON.parse(localStorage.getItem(`course_${courseId}`) || '[]').length;
             const percentage = totalLessons === 0 ? 0 : Math.round((completed / totalLessons) * 100);
             return { completed, percentage };
-        }
-
-        function openCourseFromHome(courseId) {
-            console.log('Opening course from home:', courseId);
-            
-            if (!courses || courses.length === 0) {
-                console.error('Courses not loaded yet');
-                loadFeaturedCourses().then(() => {
-                    goToCourseLesson(courseId);
-                });
-                return;
-            }
-
-            goToCourseLesson(courseId);
-        }
-
-        function goToCourseLesson(courseId) {
-            const course = courses.find(c => c.id === courseId);
-            console.log('Found course:', course);
-            
-            if (course && course.lessons && course.lessons.length > 0) {
-                console.log('Navigating to first lesson:', course.lessons[0].id);
-                sessionStorage.setItem('currentCourseId', courseId);
-                sessionStorage.setItem('currentLessonId', course.lessons[0].id);
-                window.location.href = 'lesson.html';
-            } else {
-                console.error('Course not found or has no lessons');
-            }
         }
     </script>
     <!-- Main Application Scripts -->
