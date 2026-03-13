@@ -19,6 +19,14 @@
     
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%236366f1'>C++</text></svg>">
+    
+    <!-- Проверка доступа при входе -->
+    <script>
+        // Проверяем, прошел ли пользователь через страницу селфи
+        if (!localStorage.getItem('user_entered')) {
+            window.location.href = 'selfi.html';
+        }
+    </script>
 </head>
 <body>
     <div id="app">
@@ -42,6 +50,9 @@
                 <div class="navbar-controls">
                     <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
                         <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="theme-toggle" onclick="logoutUser()" title="Выход из учебного процесса">
+                        <span class="theme-icon">🚪</span>
                     </button>
                     <button class="hamburger" onclick="toggleMobileMenu()">
                         <span></span>
@@ -204,7 +215,6 @@ int main() {
     </div>
 
     <!-- Scripts -->
-    <script src="src/js/themes.js"></script>
     <script src="src/js/animations.js"></script>
     <script>
         // Глобальная переменная courses из app.js
@@ -320,6 +330,15 @@ int main() {
             const completed = JSON.parse(localStorage.getItem(`course_${courseId}`) || '[]').length;
             const percentage = totalLessons === 0 ? 0 : Math.round((completed / totalLessons) * 100);
             return { completed, percentage };
+        }
+
+        function logoutUser() {
+            if (confirm('🚪 Вы действительно хотите выйти из учебного процесса?\n\nВаш прогресс будет сохранен.')) {
+                localStorage.removeItem('user_entered');
+                localStorage.removeItem('selfi_photo');
+                localStorage.removeItem('last_selfi_time');
+                window.location.href = 'selfi.html';
+            }
         }
     </script>
     <!-- Main Application Scripts -->
