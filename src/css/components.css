@@ -127,6 +127,10 @@
     cursor: pointer;
     gap: var(--space-xs);
     padding: var(--space-sm);
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
 }
 
 @media (max-width: 767px) {
@@ -136,11 +140,12 @@
 }
 
 .hamburger span {
-    width: 24px;
-    height: 2px;
+    width: 26px;
+    height: 2.5px;
     background-color: var(--text-primary);
     border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
+    display: block;
 }
 
 .hamburger.active span:nth-child(1) {
@@ -186,6 +191,7 @@
 /* ===== Buttons ===== */
 .btn {
     padding: var(--space-md) var(--space-xl);
+    min-height: 48px;
     border: none;
     border-radius: var(--radius-lg);
     font-size: var(--text-base);
@@ -194,6 +200,7 @@
     transition: all var(--transition-base);
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: var(--space-sm);
     text-decoration: none;
     position: relative;
