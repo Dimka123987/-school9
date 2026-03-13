@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Компактный список курсов CodePath Academy">
+    <title>Мои Курсы - CodePath Academy</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    
+    <style>
+        .compact-courses {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 2rem;
+            background-color: var(--bg-primary);
+        }
+        
+        .compact-course {
+            flex: 0 0 calc(33.333% - 1.5rem);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 200px;
+        }
+        
+        .compact-course:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 10px 30px rgba(244, 208, 63, 0.2);
+            transform: translateY(-4px);
+        }
+        
+        .compact-course-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .compact-course-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .compact-course-level {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            display: inline-block;
+        }
+        
+        .compact-course-stats {
+            font-size: 0.9rem;
+            color: var(--text-tertiary);
+            margin: 0.8rem 0;
+        }
+        
+        .compact-course-button {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #0a0805;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            margin-top: 1rem;
+        }
+        
+        .compact-course-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(244, 208, 63, 0.3);
+        }
+        
+        .compact-course-button:active {
+            transform: scale(0.98);
+        }
+        
+        .page-header {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .page-header h1 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-header p {
+            color: var(--text-secondary);
+            -webkit-text-fill-color: initial;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 1024px) {
+            .compact-course {
+                flex: 0 0 calc(50% - 1.5rem);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .compact-course {
+                flex: 0 0 100%;
+            }
+            
+            .compact-courses {
+                padding: 1rem;
+            }
+        }
+        
+        .main-content {
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-brand">
+                    <span class="brand-icon">C++</span>
+                    <span class="brand-text">CodePath Academy</span>
+                </div>
+                
+                <ul class="navbar-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="courses.html" class="nav-link">Курсы</a></li>
+                    <li><a href="courses-compact.html" class="nav-link active">Мои Курсы</a></li>
+                    <li><a href="tests.html" class="nav-link">Тесты</a></li>
+                    <li><a href="progress.html" class="nav-link">Прогресс</a></li>
+                </ul>
+                
+                <div class="navbar-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Переключить тему">
+                        <span class="theme-icon">🌙</span>
+                    </button>
+                    <button class="hamburger" onclick="toggleMobileMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Все доступные курсы</h1>
+                <p>Выберите курс и начните обучение</p>
+            </div>
+
+            <div class="compact-courses" id="coursesContainer">
+                <!-- Курсы будут загружены здесь -->
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>CodePath Academy</h4>
+                    <p>Современная платформа для изучения C++</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <ul>
+                        <li><a href="index.html">Главная</a></li>
+                        <li><a href="courses.html">Все курсы</a></li>
+                        <li><a href="courses-compact.html">Мои курсы</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Ресурсы</h4>
+                    <ul>
+                        <li><a href="about.html">О платформе</a></li>
+                        <li><a href="progress.html">Мой прогресс</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 CodePath Academy. Все права защищены. Made with ❤️ for C++ developers.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/themes.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/app.js"></script>
+    <script>
+        let courses = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllCourses();
+        });
+
+        async function loadAllCourses() {
+            try {
+                // Try to load expanded courses first, fallback to regular courses
+                let response = await fetch('src/data/courses-expanded.json');
+                if (!response.ok) {
+                    response = await fetch('src/data/courses.json');
+                }
+                
+                courses = await response.json();
+                console.log('Loaded courses:', courses.length);
+                displayCompactCourses();
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+
+        function displayCompactCourses() {
+            const container = document.getElementById('coursesContainer');
+            container.innerHTML = '';
+
+            const levelLabels = {
+                beginner: 'Для начинающих',
+                intermediate: 'Средний уровень',
+                advanced: 'Продвинутый уровень'
+            };
+
+            // Группировать по уровням
+            const levels = ['beginner', 'intermediate', 'advanced'];
+            
+            levels.forEach(level => {
+                const levelCourses = courses.filter(c => c.level === level);
+                
+                levelCourses.forEach((course, index) => {
+                    const progress = getCompactProgress(course.id, course.lessons.length);
+                    const hasTest = course.finalTest !== undefined;
+                    
+                    const card = document.createElement('div');
+                    card.className = 'compact-course';
+                    card.innerHTML = `
+                        <div>
+                            <div class="compact-course-icon">${course.icon}</div>
+                            <div class="compact-course-title">${course.title}</div>
+                            <div class="compact-course-level">${levelLabels[course.level]}</div>
+                            <div class="compact-course-stats">
+                                <div>📚 ${course.lessons.length} уроков</div>
+                                <div>✓ ${progress.completed} завершено</div>
+                                <div>📊 ${progress.percentage}% готово</div>
+                                ${hasTest ? '<div style="color: var(--accent-primary); font-weight: 600;">🧪 Финальный тест</div>' : ''}
+                            </div>
+                        </div>
+                        <button class="compact-course-button" onclick="openCourse('${course.id}')">
+                            Начать ${progress.completed > 0 ? 'снова' : 'обучение'}
+                        </button>
+                    `;
+                    
+                    card.style.animation = `slideUp 0.6s ease-out forwards`;
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    
+                    container.appendChild(card);
+                });
+            });
+        }
+
+        function getCompactProgress(courseId, totalLessons) {
+            const completed = JSON.parse(localStorage.getItem(`course_${courseId}`) || '[]').length;
+            const percentage = totalLessons === 0 ? 0 : Math.round((completed / totalLessons) * 100);
+            return { completed, percentage };
+        }
+    </script>
+</body>
+</html>

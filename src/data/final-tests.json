@@ -1,0 +1,166 @@
+{
+  "addFinalTestsToCourses": true,
+  "description": "Финальные тесты для каждого курса - one-shot тесты которые нельзя переделать",
+  "finalTests": {
+    "cpp-basics": {
+      "id": "final-test-basics",
+      "title": "Финальный тест: Основы C++",
+      "description": "Проверка знаний основных концепций C++ для начинающих",
+      "difficulty": "easy",
+      "timeLimit": 30,
+      "oneShot": true,
+      "tasks": [
+        {
+          "id": "task-1",
+          "title": "Простая переменная",
+          "description": "Напишите программу, которая объявляет переменную целого типа, присваивает ей значение 42 и выводит её на экран",
+          "difficulty": "easy",
+          "expectedOutput": "42",
+          "hints": [
+            "Используйте int для целого числа",
+            "Используйте cout для вывода",
+            "Не забудьте std::endl"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x = 42;\n    cout << x << endl;\n    return 0;\n}"
+        },
+        {
+          "id": "task-2",
+          "title": "Условный оператор",
+          "description": "Напишите программу которая проверяет: если число больше 10, выведите 'Большое', иначе выведите 'Малое'",
+          "difficulty": "easy",
+          "expectedOutput": "Большое\nМалое",
+          "hints": [
+            "Используйте if-else",
+            "Введите два числа для проверки",
+            "10 - это граница"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    if (15 > 10) cout << \"Большое\" << endl;\n    if (5 > 10) cout << \"Малое\" << endl;\n    return 0;\n}"
+        },
+        {
+          "id": "task-3",
+          "title": "Цикл for",
+          "description": "Выведите числа от 1 до 5 в одной строке через пробел",
+          "difficulty": "easy",
+          "expectedOutput": "1 2 3 4 5",
+          "hints": [
+            "Используйте цикл for",
+            "Начните с 1, заканчивайте 5",
+            "Выводите пробел после каждого числа"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    for (int i = 1; i <= 5; i++) {\n        cout << i << \" \";\n    }\n    cout << endl;\n    return 0;\n}"
+        },
+        {
+          "id": "task-4",
+          "title": "Функция",
+          "description": "Создайте функцию, которая суммирует два числа и вернёт результат. Вызовите с 3 и 7",
+          "difficulty": "easy",
+          "expectedOutput": "10",
+          "hints": [
+            "Функция должна возвращать int",
+            "Она должна принимать два параметра",
+            "Вызовите её с 3 и 7, выведите результат"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\nint sum(int a, int b) {\n    return a + b;\n}\n\nint main() {\n    cout << sum(3, 7) << endl;\n    return 0;\n}"
+        },
+        {
+          "id": "task-5",
+          "title": "Массив",
+          "description": "Создайте массив из 5 чисел [1,2,3,4,5] и выведите их сумму",
+          "difficulty": "easy",
+          "expectedOutput": "15",
+          "hints": [
+            "Используйте int arr[5]",
+            "Инициализируйте: {1, 2, 3, 4, 5}",
+            "Используйте цикл для суммирования"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int arr[5] = {1, 2, 3, 4, 5};\n    int sum = 0;\n    for (int i = 0; i < 5; i++) {\n        sum += arr[i];\n    }\n    cout << sum << endl;\n    return 0;\n}"
+        }
+      ]
+    },
+    "cpp-intermediate": {
+      "id": "final-test-intermediate",
+      "title": "Финальный тест: Средний уровень",
+      "description": "Проверка знаний указателей, ссылок и объектно-ориентированного программирования",
+      "difficulty": "medium",
+      "timeLimit": 45,
+      "oneShot": true,
+      "tasks": [
+        {
+          "id": "task-1",
+          "title": "Указатели",
+          "description": "Создайте переменную int x=10. Создайте указатель на неё и выведите значение и адрес",
+          "difficulty": "medium",
+          "expectedOutput": "10",
+          "hints": [
+            "Используйте int* для указателя",
+            "Используйте & для получения адреса",
+            "Используйте * для разыменования"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\nint main() {\n    int x = 10;\n    int* ptr = &x;\n    cout << *ptr << endl;\n    return 0;\n}"
+        },
+        {
+          "id": "task-2",
+          "title": "Класс и конструктор",
+          "description": "Создайте класс Person с именем и возрастом, конструктор и выведите данные",
+          "difficulty": "medium",
+          "expectedOutput": "John 25",
+          "hints": [
+            "Используйте class",
+            "Добавьте конструктор",
+            "Выведите имя и возраст через пробел"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\nclass Person {\npublic:\n    string name;\n    int age;\n    Person(string n, int a) : name(n), age(a) {}\n};\n\nint main() {\n    Person p(\"John\", 25);\n    cout << p.name << \" \" << p.age << endl;\n    return 0;\n}"
+        },
+        {
+          "id": "task-3",
+          "title": "Вектор",
+          "description": "Создайте вектор из 3 чисел, добавьте ещё 2, выведите размер и сумму",
+          "difficulty": "medium",
+          "expectedOutput": "5\n15",
+          "hints": [
+            "Используйте vector<int>",
+            "push_back для добавления",
+            "size() для размера"
+          ],
+          "solution": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> v = {1, 2, 3};\n    v.push_back(4);\n    v.push_back(5);\n    int sum = 0;\n    for (int x : v) sum += x;\n    cout << v.size() << endl << sum << endl;\n    return 0;\n}"
+        }
+      ]
+    },
+    "cpp-advanced": {
+      "id": "final-test-advanced",
+      "title": "Финальный тест: Продвинутый уровень",
+      "description": "Проверка понимания шаблонов, наследования и продвинутых концепций C++",
+      "difficulty": "hard",
+      "timeLimit": 60,
+      "oneShot": true,
+      "tasks": [
+        {
+          "id": "task-1",
+          "title": "Шаблон функции",
+          "description": "Создайте шаблонную функцию max, которая возвращает большее из двух значений. Вызовите с 5 и 3",
+          "difficulty": "hard",
+          "expectedOutput": "5",
+          "hints": [
+            "Используйте template <typename T>",
+            "Функция должна работать с разными типами",
+            "Вернитесь большее значение"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\ntemplate <typename T>\nT maxVal(T a, T b) {\n    return a > b ? a : b;\n}\n\nint main() {\n    cout << maxVal(5, 3) << endl;\n    return 0;\n}"
+        },
+        {
+          "id": "task-2",
+          "title": "Наследование",
+          "description": "Создайте базовый класс Animal и класс Dog который его наследует. Переопределите виртуальный метод",
+          "difficulty": "hard",
+          "expectedOutput": "Bark",
+          "hints": [
+            "Используйте virtual",
+            "Dog должен переопределить метод",
+            "Выведите результат вызова"
+          ],
+          "solution": "#include <iostream>\nusing namespace std;\n\nclass Animal {\npublic:\n    virtual void sound() { cout << \"Sound\" << endl; }\n};\n\nclass Dog : public Animal {\npublic:\n    void sound() override { cout << \"Bark\" << endl; }\n};\n\nint main() {\n    Dog d;\n    d.sound();\n    return 0;\n}"
+        }
+      ]
+    }
+  }
+}

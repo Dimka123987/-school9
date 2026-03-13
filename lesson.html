@@ -6,12 +6,220 @@
     <meta name="description" content="Уроки по C++ на платформе CodePath Academy">
     <title>Урок - CodePath Academy</title>
     
-    <!-- Stylesheets -->
     <link rel="stylesheet" href="src/css/variables.css">
     <link rel="stylesheet" href="src/css/base.css">
     <link rel="stylesheet" href="src/css/components.css">
     <link rel="stylesheet" href="src/css/animations.css">
     <link rel="stylesheet" href="src/css/responsive.css">
+    
+    <style>
+        /* Final Test Modal Styles */
+        .final-test-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .final-test-content {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .final-test-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--accent-primary);
+            padding-bottom: 20px;
+        }
+
+        .final-test-header h2 {
+            color: var(--accent-primary);
+            margin: 0 0 10px 0;
+        }
+
+        .final-test-header p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .test-questions {
+            margin: 30px 0;
+        }
+
+        .test-question {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent-primary);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .test-question h3 {
+            margin: 0 0 15px 0;
+            color: var(--text-primary);
+        }
+
+        .test-question p {
+            color: var(--text-secondary);
+            margin: 0 0 15px 0;
+        }
+
+        .test-answer-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .test-answer-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .test-answer-option:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-secondary);
+        }
+
+        .test-answer-option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .test-answer-option label {
+            cursor: pointer;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .test-footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        /* Test Submitted Modal */
+        .test-submitted-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .test-submitted-content {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .test-submitted-header {
+            margin-bottom: 30px;
+        }
+
+        .test-success-icon {
+            font-size: 60px;
+            color: var(--success-color);
+            margin-bottom: 15px;
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        .test-submitted-header h2 {
+            margin: 15px 0 10px 0;
+            color: var(--text-primary);
+        }
+
+        .test-submitted-header p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .test-submitted-body {
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .test-submitted-body p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .test-submitted-footer {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+    <!-- Stylesheets -->
+
     
     <!-- GSAP для продвинутых анимаций -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -33,6 +241,7 @@
                 <ul class="navbar-menu">
                     <li><a href="index.html" class="nav-link">Главная</a></li>
                     <li><a href="courses.html" class="nav-link">Курсы</a></li>
+                    <li><a href="courses-compact.html" class="nav-link">Все курсы</a></li>
                     <li><a href="tests.html" class="nav-link">Тесты</a></li>
                     <li><a href="progress.html" class="nav-link">Прогресс</a></li>
                     <li><a href="about.html" class="nav-link">О платформе</a></li>
@@ -104,6 +313,43 @@
                             ✓ Отметить как пройденный
                         </button>
                     </div>
+
+                    <!-- Final Test Modal (if at end of course) -->
+                    <div id="final-test-modal" class="final-test-modal" style="display: none;">
+                        <div class="final-test-content">
+                            <div class="final-test-header">
+                                <h2 id="test-title">Финальный тест</h2>
+                                <p id="test-description">Проверьте свои знания</p>
+                            </div>
+                            <div id="test-questions" class="test-questions">
+                                <!-- Динамически заполняется -->
+                            </div>
+                            <div class="test-footer">
+                                <button class="btn btn-danger" onclick="closeFinalTest()">← Вернуться к курсу</button>
+                                <button class="btn btn-primary" id="submit-test-btn" onclick="submitFinalTest()">Отправить тест</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Test Submitted Modal (one-shot lock) -->
+                    <div id="test-submitted-modal" class="test-submitted-modal" style="display: none;">
+                        <div class="test-submitted-content">
+                            <div class="test-submitted-header">
+                                <div class="test-success-icon">✓</div>
+                                <h2>Тест завершен!</h2>
+                                <p id="test-score">Ваш результат сохранен</p>
+                            </div>
+                            <div class="test-submitted-body">
+                                <p style="text-align: center; margin-top: 20px;">
+                                    <strong>Внимание:</strong> Вы не можете пересдать этот тест или посмотреть правильные ответы.<br>
+                                    Все было выполнено вами самостоятельно. Спасибо за прохождение курса!
+                                </p>
+                            </div>
+                            <div class="test-submitted-footer">
+                                <button class="btn btn-primary" onclick="finishCourse()">Завершить курс</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -137,7 +383,6 @@
         </footer>
     </div>
 
-    <!-- Scripts -->
     <script src="src/js/themes.js"></script>
     <script src="src/js/storage.js"></script>
     <script src="src/js/app.js"></script>
@@ -147,37 +392,42 @@
         let currentCourse = null;
         let currentLesson = null;
         let courses = [];
+        let finalTests = {};
+        let testAnswers = {};
 
         document.addEventListener('DOMContentLoaded', function() {
             // Load courses
             loadCoursesData().then(() => {
-                // Get IDs from sessionStorage
-                const courseId = sessionStorage.getItem('currentCourseId');
-                const lessonId = sessionStorage.getItem('currentLessonId');
-                
-                console.log('Loaded courses:', courses.length);
-                console.log('CourseId:', courseId, 'LessonId:', lessonId);
-                
-                if (courseId && lessonId && courses.length > 0) {
-                    currentCourse = courses.find(c => c.id === courseId);
-                    console.log('Found course:', currentCourse ? currentCourse.title : 'NOT FOUND');
+                loadFinalTests().then(() => {
+                    // Get IDs from sessionStorage
+                    const courseId = sessionStorage.getItem('currentCourseId');
+                    const lessonId = sessionStorage.getItem('currentLessonId');
                     
-                    if (currentCourse) {
-                        currentLesson = currentCourse.lessons.find(l => l.id === lessonId);
-                        console.log('Found lesson:', currentLesson ? currentLesson.title : 'NOT FOUND');
+                    console.log('Loaded courses:', courses.length);
+                    console.log('CourseId:', courseId, 'LessonId:', lessonId);
+                    
+                    if (courseId && lessonId && courses.length > 0) {
+                        currentCourse = courses.find(c => c.id === courseId);
+                        console.log('Found course:', currentCourse ? currentCourse.title : 'NOT FOUND');
                         
-                        if (currentLesson) {
-                            displayLesson(courseId, lessonId);
-                            updateProgressCircle();
+                        if (currentCourse) {
+                            currentLesson = currentCourse.lessons.find(l => l.id === lessonId);
+                            console.log('Found lesson:', currentLesson ? currentLesson.title : 'NOT FOUND');
+                            
+                            if (currentLesson) {
+                                displayLesson(courseId, lessonId);
+                                updateProgressCircle();
+                                checkIfTestSubmitted(courseId);
+                            } else {
+                                console.error('Lesson not found');
+                            }
                         } else {
-                            console.error('Lesson not found');
+                            console.error('Course not found');
                         }
                     } else {
-                        console.error('Course not found');
+                        console.error('Missing course or lesson ID');
                     }
-                } else {
-                    console.error('Missing course or lesson ID');
-                }
+                });
             }).catch(error => {
                 console.error('Failed to load:', error);
             });
@@ -195,6 +445,22 @@
             } catch (error) {
                 console.error('Error loading courses:', error);
                 throw error;
+            }
+        }
+
+        async function loadFinalTests() {
+            try {
+                const response = await fetch('src/data/final-tests.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                finalTests = data.finalTests || {};
+                console.log('Loaded final tests:', Object.keys(finalTests));
+                return finalTests;
+            } catch (error) {
+                console.error('Error loading final tests:', error);
+                return {};
             }
         }
 
@@ -311,8 +577,145 @@
 
         function markLessonComplete() {
             markLessonAsCompleted(currentCourse.id, currentLesson.id);
+            const currentIndex = currentCourse.lessons.findIndex(l => l.id === currentLesson.id);
+            const isLastLesson = currentIndex === currentCourse.lessons.length - 1;
+            
             displayLesson(currentCourse.id, currentLesson.id);
-            showNotification('Отлично! Урок отмечен как пройденный.');
+            
+            // If last lesson, show final test modal
+            if (isLastLesson) {
+                setTimeout(() => {
+                    showFinalTestModal();
+                }, 500);
+            } else {
+                showNotification('Отлично! Урок отмечен как пройденный.');
+            }
+        }
+
+        function showFinalTestModal() {
+            const testKey = currentCourse.id;
+            const testData = finalTests[testKey];
+            
+            if (!testData || !testData.tasks || testData.tasks.length === 0) {
+                showNotification('Финальный тест для этого курса еще не готов.');
+                return;
+            }
+
+            // Check if test already submitted
+            const testSubmittedKey = `test_submitted_${currentCourse.id}`;
+            if (localStorage.getItem(testSubmittedKey)) {
+                showTestSubmittedModal();
+                return;
+            }
+
+            document.getElementById('test-title').textContent = testData.title;
+            document.getElementById('test-description').textContent = testData.description;
+            
+            const questionsDiv = document.getElementById('test-questions');
+            let html = '';
+            
+            testData.tasks.forEach((task, idx) => {
+                html += `
+                    <div class="test-question">
+                        <h3>Задание ${idx + 1}: ${task.title}</h3>
+                        <p>${task.description}</p>
+                        <p style="color: var(--text-secondary); font-size: 0.9em;">
+                            <strong>Ожидаемый результат:</strong> ${task.expectedOutput}
+                        </p>
+                        <div style="margin: 15px 0; padding: 15px; background: var(--bg-primary); border-radius: 8px;">
+                            <p style="margin: 0 0 10px 0; font-weight: bold;">Ваше решение:</p>
+                            <textarea 
+                                id="task-${task.id}" 
+                                placeholder="Напишите ваш C++ код здесь..." 
+                                style="width: 100%; height: 150px; padding: 10px; border: 2px solid var(--border-color); border-radius: 4px; font-family: 'Courier New', monospace; font-size: 0.9em; background: var(--bg-secondary); color: var(--text-primary);"
+                            ></textarea>
+                        </div>
+                        ${task.hints && task.hints.length > 0 ? `
+                            <details style="margin-top: 10px;">
+                                <summary style="cursor: pointer; color: var(--accent-primary); font-weight: bold;">💡 Подсказки</summary>
+                                <ul style="margin-top: 10px; padding-left: 20px; color: var(--text-secondary);">
+                                    ${task.hints.map(hint => `<li>${hint}</li>`).join('')}
+                                </ul>
+                            </details>
+                        ` : ''}
+                    </div>
+                `;
+            });
+            
+            questionsDiv.innerHTML = html;
+            document.getElementById('final-test-modal').style.display = 'flex';
+        }
+
+        function submitFinalTest() {
+            const testKey = currentCourse.id;
+            const testData = finalTests[testKey];
+            
+            if (!testData || !testData.tasks) return;
+
+            // Collect answers
+            const answers = {};
+            testData.tasks.forEach(task => {
+                const textarea = document.getElementById(`task-${task.id}`);
+                if (textarea) {
+                    answers[task.id] = textarea.value;
+                }
+            });
+
+            // Save test submission (one-shot lock)
+            localStorage.setItem(`test_submitted_${currentCourse.id}`, JSON.stringify({
+                timestamp: new Date().toISOString(),
+                answers: answers,
+                courseId: currentCourse.id
+            }));
+
+            // Mark course as fully completed
+            markCourseCompleted(currentCourse.id);
+
+            // Close test modal and show submitted modal
+            document.getElementById('final-test-modal').style.display = 'none';
+            showTestSubmittedModal();
+        }
+
+        function showTestSubmittedModal() {
+            document.getElementById('test-submitted-modal').style.display = 'flex';
+        }
+
+        function closeFinalTest() {
+            document.getElementById('final-test-modal').style.display = 'none';
+        }
+
+        function finishCourse() {
+            document.getElementById('test-submitted-modal').style.display = 'none';
+            sessionStorage.removeItem('currentCourseId');
+            sessionStorage.removeItem('currentLessonId');
+            window.location.href = 'courses.html';
+        }
+
+        function checkIfTestSubmitted(courseId) {
+            const testSubmittedKey = `test_submitted_${courseId}`;
+            if (localStorage.getItem(testSubmittedKey)) {
+                // Test already submitted - disable navigation and show message
+                const prevBtn = document.querySelector('.prev-lesson');
+                const nextBtn = document.querySelector('.next-lesson');
+                const completeBtn = document.getElementById('complete-btn');
+                
+                if (prevBtn) prevBtn.disabled = true;
+                if (nextBtn) nextBtn.disabled = true;
+                if (completeBtn) {
+                    completeBtn.disabled = true;
+                    completeBtn.textContent = '✓ Курс завершен (Тест уже сдан)';
+                }
+            }
+        }
+
+        function markCourseCompleted(courseId) {
+            const progress = getProgress();
+            if (!progress[courseId]) {
+                progress[courseId] = {};
+            }
+            progress[courseId]._courseCompleted = true;
+            progress[courseId]._completedDate = new Date().toISOString();
+            setProgress(progress);
         }
 
         function copyCode(btn) {
@@ -340,7 +743,10 @@
         function getCompletedLessons(courseId) {
             const progress = getProgress();
             if (!progress[courseId]) return [];
-            return Object.keys(progress[courseId]).filter(lessonId => progress[courseId][lessonId].completed);
+            return Object.keys(progress[courseId]).filter(lessonId => 
+                lessonId !== '_courseCompleted' && lessonId !== '_completedDate' && 
+                progress[courseId][lessonId].completed
+            );
         }
 
         function showNotification(message) {
