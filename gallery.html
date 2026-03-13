@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Галерея селфи - Администратор</title>
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/responsive.css">
+    <style>
+        .gallery-container {
+            min-height: 100vh;
+            padding: var(--space-2xl);
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+        }
+
+        .login-box {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: var(--space-3xl);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-color);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--space-2xl);
+        }
+
+        .login-header h1 {
+            color: var(--accent-primary);
+            font-size: var(--text-4xl);
+            margin-bottom: var(--space-md);
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: var(--space-sm);
+            font-weight: var(--font-semibold);
+            color: var(--text-primary);
+        }
+
+        .form-group input {
+            padding: var(--space-md);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 16px;
+            min-height: 44px;
+            transition: border-color var(--transition-fast);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .login-btn {
+            padding: var(--space-md) var(--space-lg);
+            min-height: 48px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #0a0805;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: var(--font-bold);
+            font-size: var(--text-base);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            box-shadow: 0 4px 15px rgba(244, 208, 63, 0.4);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 208, 63, 0.6);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            padding: var(--space-md);
+            background-color: rgba(220, 53, 69, 0.1);
+            border-left: 4px solid #dc3545;
+            border-radius: var(--radius-md);
+            color: #dc3545;
+            font-weight: var(--font-semibold);
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        /* Галерея */
+        .gallery-grid {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-2xl);
+            flex-wrap: wrap;
+            gap: var(--space-lg);
+        }
+
+        .gallery-header h1 {
+            color: var(--accent-primary);
+            font-size: var(--text-4xl);
+        }
+
+        .gallery-stats {
+            display: flex;
+            gap: var(--space-2xl);
+            font-weight: var(--font-semibold);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: var(--text-3xl);
+            color: var(--accent-primary);
+        }
+
+        .stat-label {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+
+        .logout-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: var(--font-semibold);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            min-height: 44px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .selfies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-2xl);
+            margin-bottom: var(--space-3xl);
+        }
+
+        .selfie-card {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .selfie-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(212, 175, 55, 0.2);
+            border-color: var(--accent-primary);
+        }
+
+        .selfie-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            background-color: #000;
+        }
+
+        .selfie-info {
+            padding: var(--space-lg);
+            text-align: center;
+        }
+
+        .selfie-time {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .selfie-id {
+            font-size: 0.8rem;
+            color: var(--accent-primary);
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .download-btn {
+            margin-top: var(--space-md);
+            padding: 0.6rem 1rem;
+            background-color: var(--accent-primary);
+            color: #0a0805;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: var(--font-semibold);
+            cursor: pointer;
+            width: 100%;
+            transition: all var(--transition-base);
+        }
+
+        .download-btn:hover {
+            background-color: var(--accent-secondary);
+            transform: scale(1.02);
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: var(--space-4xl);
+            color: var(--text-secondary);
+            font-size: var(--text-xl);
+        }
+
+        .empty-message-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-lg);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-container {
+                padding: var(--space-lg);
+            }
+
+            .login-box {
+                padding: var(--space-2xl);
+            }
+
+            .selfies-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+
+            .gallery-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .gallery-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+
+            .logout-btn {
+                width: 100%;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="gallery-container">
+        <!-- Форма входа -->
+        <div id="login-section" class="login-box">
+            <div class="login-header">
+                <h1>🔐 Админ Панель</h1>
+                <p>Введите пароль для просмотра галереи селфи</p>
+            </div>
+
+            <div id="error-message" class="error-message"></div>
+
+            <form class="login-form" id="login-form">
+                <div class="form-group">
+                    <label for="admin-password">Пароль администратора:</label>
+                    <input 
+                        type="password" 
+                        id="admin-password" 
+                        placeholder="Введите пароль"
+                        autocomplete="off"
+                    >
+                </div>
+                <button type="submit" class="login-btn">Войти в галерею</button>
+            </form>
+        </div>
+
+        <!-- Галерея -->
+        <div id="gallery-section" class="gallery-grid" style="display: none;">
+            <div class="gallery-header">
+                <div>
+                    <h1>📸 Галерея селфи</h1>
+                    <p style="color: var(--text-secondary);">Все сделанные снимки</p>
+                </div>
+                <div class="gallery-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-count">0</div>
+                        <div class="stat-label">Всего селфи</div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logoutAdmin()">🚪 Выход</button>
+            </div>
+
+            <div id="selfies-container" class="selfies-grid"></div>
+        </div>
+    </div>
+
+    <script src="src/js/themes.js"></script>
+    <script>
+        const ADMIN_PASSWORD = 'пароль123';
+        let isAuthenticated = false;
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('login-form');
+            const passwordInput = document.getElementById('admin-password');
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                checkPassword(passwordInput.value);
+            });
+
+            // Проверяем, есть ли уже активная сессия админа
+            if (sessionStorage.getItem('admin_authenticated')) {
+                isAuthenticated = true;
+                showGallery();
+            }
+        });
+
+        // Проверка пароля
+        function checkPassword(password) {
+            const errorMsg = document.getElementById('error-message');
+
+            if (password === ADMIN_PASSWORD) {
+                // Сохраняем сессию
+                sessionStorage.setItem('admin_authenticated', 'true');
+                isAuthenticated = true;
+                showGallery();
+            } else {
+                // Показываем ошибку
+                errorMsg.textContent = '❌ Неверный пароль. Попробуйте снова.';
+                errorMsg.style.display = 'block';
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-password').focus();
+
+                // Скрываем ошибку через 4 сек
+                setTimeout(() => {
+                    errorMsg.style.display = 'none';
+                }, 4000);
+            }
+        }
+
+        // Показать галерею
+        function showGallery() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('gallery-section').style.display = 'block';
+            loadSelfies();
+        }
+
+        // Загрузить селфи
+        function loadSelfies() {
+            try {
+                const selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+                const container = document.getElementById('selfies-container');
+                const totalCount = document.getElementById('total-count');
+
+                totalCount.textContent = selfies.length;
+
+                if (selfies.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column: 1 / -1;">
+                            <div class="empty-message">
+                                <div class="empty-message-icon">📷</div>
+                                <div>В галерее нет селфи</div>
+                                <p style="margin-top: var(--space-md); font-size: var(--text-base);">Селфи будут добавляться автоматически при входе пользователей</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // Сортируем по новизне
+                const sortedSelfies = [...selfies].reverse();
+
+                container.innerHTML = sortedSelfies.map(selfie => `
+                    <div class="selfie-card" onclick="viewFullImage('${selfie.photo}')">
+                        <img src="${selfie.photo}" alt="Селфи" class="selfie-image">
+                        <div class="selfie-info">
+                            <div class="selfie-time">
+                                ${new Date(selfie.timestamp).toLocaleString('ru-RU')}
+                            </div>
+                            <button class="download-btn" onclick="downloadSelfie(event, '${selfie.photo}', ${selfie.id})">
+                                ⬇️ Скачать
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading selfies:', error);
+            }
+        }
+
+        // Просмотр полного изображения
+        function viewFullImage(imageData) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.95);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                cursor: pointer;
+            `;
+
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.style.cssText = `
+                max-width: 90vw;
+                max-height: 90vh;
+                border-radius: 8px;
+            `;
+
+            modal.appendChild(img);
+            modal.addEventListener('click', () => {
+                modal.remove();
+            });
+
+            document.body.appendChild(modal);
+        }
+
+        // Скачать селфи
+        function downloadSelfie(event, imageData, id) {
+            event.stopPropagation();
+
+            const link = document.createElement('a');
+            link.href = imageData;
+            link.download = `selfie-${id}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Выход администратора
+        function logoutAdmin() {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                sessionStorage.removeItem('admin_authenticated');
+                isAuthenticated = false;
+                document.getElementById('login-section').style.display = 'block';
+                document.getElementById('gallery-section').style.display = 'none';
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-password').focus();
+            }
+        }
+    </script>
+</body>
+</html>

