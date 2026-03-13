@@ -160,7 +160,7 @@
                 };
                 
                 html += `
-                    <div class="course-card" onclick="openCourse('${course.id}')">
+                    <div class="course-card" data-level="${course.level}" onclick="openCourse('${course.id}')">
                         <div class="course-header">
                             <span class="course-icon">${course.icon}</span>
                             <span class="course-level">${levelLabels[course.level]}</span>
@@ -226,15 +226,14 @@
                 }
             });
             
-            // Filter courses
+            // Filter courses by level
             const cards = document.querySelectorAll('.course-card');
             cards.forEach(card => {
+                const cardLevel = card.getAttribute('data-level');
                 if (level === 'all') {
                     card.style.display = '';
                 } else {
-                    const courseId = card.getAttribute('onclick').match(/'([^']+)'/)[1];
-                    const course = courses.find(c => c.id === courseId);
-                    card.style.display = course.level === level ? '' : 'none';
+                    card.style.display = cardLevel === level ? '' : 'none';
                 }
             });
         }

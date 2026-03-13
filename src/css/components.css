@@ -428,7 +428,6 @@ input:focus, textarea:focus, select:focus {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
     margin-bottom: var(--space-xl);
     animation: slideUp 0.8s ease-out 0.1s forwards;
     opacity: 0;
@@ -631,6 +630,7 @@ input:focus, textarea:focus, select:focus {
     font-weight: var(--font-bold);
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: var(--space-sm);
 }
