@@ -14,43 +14,63 @@ let lessonStartTime = null;
  * This function navigates to the lesson page with the first lesson of the course
  */
 function openCourse(courseId) {
-    console.log('openCourse called with courseId:', courseId);
+    console.log('🎓 openCourse called with courseId:', courseId);
+    
+    if (!courseId) {
+        console.error('❌ No courseId provided to openCourse');
+        alert('Ошибка: ID курса не найден');
+        return;
+    }
     
     // Try to find in various locations
     let coursesList = null;
     
     // 1. Check if courses are already loaded globally
     if (window.courses && window.courses.length > 0) {
-        console.log('Found courses in window.courses');
+        console.log('✓ Found courses in window.courses:', window.courses.length);
         coursesList = window.courses;
     } else if (typeof courses !== 'undefined' && courses.length > 0) {
-        console.log('Found courses in local variable');
+        console.log('✓ Found courses in local variable:', courses.length);
         coursesList = courses;
     } else {
-        console.log('Courses not loaded, attempting to load...');
+        console.log('⏳ Courses not loaded, attempting to load...');
         loadCoursesForOpen(courseId);
         return;
     }
     
     // Find the course
     const course = coursesList.find(c => c.id === courseId);
-    console.log('Found course:', course ? course.title : 'NOT FOUND');
+    console.log('Course search result:', course ? '✓ Found: ' + course.title : '❌ NOT FOUND');
     
     if (!course) {
-        console.error('Course not found with id:', courseId);
+        console.error('❌ Course not found with id:', courseId);
+        console.log('Available course ids:', coursesList.map(c => c.id));
+        alert('Ошибка: Курс не найден');
         return;
     }
     
     if (!course.lessons || course.lessons.length === 0) {
-        console.error('Course has no lessons');
+        console.error('❌ Course has no lessons');
+        alert('Ошибка: В курсе нет уроков');
         return;
     }
     
     // Navigate to lesson page
-    console.log('Navigating to lesson page with course:', courseId, 'and lesson:', course.lessons[0].id);
-    sessionStorage.setItem('currentCourseId', courseId);
-    sessionStorage.setItem('currentLessonId', course.lessons[0].id);
-    window.location.href = 'lesson.html';
+    const firstLessonId = course.lessons[0].id;
+    console.log('✓ Navigating to lesson page. Course:', courseId, 'Lesson:', firstLessonId);
+    
+    try {
+        sessionStorage.setItem('currentCourseId', courseId);
+        sessionStorage.setItem('currentLessonId', firstLessonId);
+        console.log('✓ SessionStorage set successfully');
+        console.log('  - currentCourseId:', sessionStorage.getItem('currentCourseId'));
+        console.log('  - currentLessonId:', sessionStorage.getItem('currentLessonId'));
+        
+        window.location.href = 'lesson.html';
+    } catch (error) {
+        console.error('❌ Error setting sessionStorage or navigating:', error);
+        alert('Ошибка при открытии курса: ' + error.message);
+    }
 }
 
 /**
@@ -58,27 +78,45 @@ function openCourse(courseId) {
  */
 async function loadCoursesForOpen(courseId) {
     try {
-        console.log('Loading courses from JSON...');
+        console.log('⏳ Loading courses from JSON...');
         const response = await fetch('src/data/courses.json');
-        if (!response.ok) throw new Error('Failed to load courses');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
         
         const loadedCourses = await response.json();
+        console.log('✓ Loaded courses JSON:', loadedCourses.length, 'courses');
+        
         window.courses = loadedCourses;
         
         const course = loadedCourses.find(c => c.id === courseId);
-        console.log('After loading, found course:', course ? course.title : 'NOT FOUND');
+        console.log('After loading, found course:', course ? '✓ ' + course.title : '❌ NOT FOUND');
         
-        if (!course || !course.lessons || course.lessons.length === 0) {
-            console.error('Course not found or has no lessons after loading');
+        if (!course) {
+            console.error('❌ Course not found after loading:', courseId);
+            console.log('Available ids:', loadedCourses.map(c => c.id));
+            alert('Ошибка: Курс не найден в базе данных');
             return;
         }
         
-        console.log('Navigating to lesson page');
+        if (!course.lessons || course.lessons.length === 0) {
+            console.error('❌ Course has no lessons');
+            alert('Ошибка: Курс не содержит уроков');
+            return;
+        }
+        
+        const firstLessonId = course.lessons[0].id;
+        console.log('✓ Setting session storage for:', courseId, firstLessonId);
+        
         sessionStorage.setItem('currentCourseId', courseId);
-        sessionStorage.setItem('currentLessonId', course.lessons[0].id);
+        sessionStorage.setItem('currentLessonId', firstLessonId);
+        
+        console.log('✓ Navigating to lesson.html');
         window.location.href = 'lesson.html';
     } catch (error) {
-        console.error('Error loading courses:', error);
+        console.error('❌ Error loading courses:', error);
+        alert('Ошибка при загрузке курсов: ' + error.message);
     }
 }
 

@@ -396,40 +396,90 @@
         let testAnswers = {};
 
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('📖 Lesson page loaded');
+            
             // Load courses
             loadCoursesData().then(() => {
-                loadFinalTests().then(() => {
+                console.log('✓ Courses loaded:', courses.length);
+                
+                return loadFinalTests().then(() => {
+                    console.log('✓ Final tests loaded');
+                    
                     // Get IDs from sessionStorage
                     const courseId = sessionStorage.getItem('currentCourseId');
                     const lessonId = sessionStorage.getItem('currentLessonId');
                     
-                    console.log('Loaded courses:', courses.length);
-                    console.log('CourseId:', courseId, 'LessonId:', lessonId);
+                    console.log('📌 Session data:', { courseId, lessonId, coursesCount: courses.length });
                     
-                    if (courseId && lessonId && courses.length > 0) {
-                        currentCourse = courses.find(c => c.id === courseId);
-                        console.log('Found course:', currentCourse ? currentCourse.title : 'NOT FOUND');
-                        
-                        if (currentCourse) {
-                            currentLesson = currentCourse.lessons.find(l => l.id === lessonId);
-                            console.log('Found lesson:', currentLesson ? currentLesson.title : 'NOT FOUND');
-                            
-                            if (currentLesson) {
-                                displayLesson(courseId, lessonId);
-                                updateProgressCircle();
-                                checkIfTestSubmitted(courseId);
-                            } else {
-                                console.error('Lesson not found');
-                            }
-                        } else {
-                            console.error('Course not found');
-                        }
-                    } else {
-                        console.error('Missing course or lesson ID');
+                    if (!courseId || !lessonId) {
+                        console.error('❌ Missing course or lesson ID in sessionStorage');
+                        document.body.innerHTML = `
+                            <div style="text-align: center; padding: 50px; font-size: 18px;">
+                                <h2>❌ Ошибка</h2>
+                                <p>ID курса или урока не найдены.</p>
+                                <p><a href="courses.html" style="color: var(--accent-primary);">← Вернуться к курсам</a></p>
+                            </div>
+                        `;
+                        return;
                     }
+                    
+                    if (courses.length === 0) {
+                        console.error('❌ No courses loaded');
+                        document.body.innerHTML = `
+                            <div style="text-align: center; padding: 50px; font-size: 18px;">
+                                <h2>❌ Ошибка</h2>
+                                <p>Курсы не загружены. Проверьте подключение к интернету.</p>
+                                <p><a href="index.html" style="color: var(--accent-primary);">← На главную</a></p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    currentCourse = courses.find(c => c.id === courseId);
+                    console.log('Found course:', currentCourse ? '✓ ' + currentCourse.title : '❌ NOT FOUND');
+                    console.log('Available course IDs:', courses.map(c => c.id));
+                    
+                    if (!currentCourse) {
+                        console.error('❌ Course not found with id:', courseId);
+                        document.body.innerHTML = `
+                            <div style="text-align: center; padding: 50px; font-size: 18px;">
+                                <h2>❌ Курс не найден</h2>
+                                <p>Курс с ID "${courseId}" не существует.</p>
+                                <p><a href="courses.html" style="color: var(--accent-primary);">← Вернуться к курсам</a></p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    currentLesson = currentCourse.lessons.find(l => l.id === lessonId);
+                    console.log('Found lesson:', currentLesson ? '✓ ' + currentLesson.title : '❌ NOT FOUND');
+                    
+                    if (!currentLesson) {
+                        console.error('❌ Lesson not found with id:', lessonId);
+                        console.log('Available lesson IDs:', currentCourse.lessons.map(l => l.id));
+                        document.body.innerHTML = `
+                            <div style="text-align: center; padding: 50px; font-size: 18px;">
+                                <h2>❌ Урок не найден</h2>
+                                <p>Урок с ID "${lessonId}" не существует в этом курсе.</p>
+                                <p><a href="courses.html" style="color: var(--accent-primary);">← Вернуться к курсам</a></p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    displayLesson(courseId, lessonId);
+                    updateProgressCircle();
+                    checkIfTestSubmitted(courseId);
                 });
             }).catch(error => {
-                console.error('Failed to load:', error);
+                console.error('❌ Failed to load data:', error);
+                document.body.innerHTML = `
+                    <div style="text-align: center; padding: 50px; font-size: 18px;">
+                        <h2>❌ Ошибка загрузки</h2>
+                        <p>${error.message}</p>
+                        <p><a href="courses.html" style="color: var(--accent-primary);">← Вернуться к курсам</a></p>
+                    </div>
+                `;
             });
         });
 
