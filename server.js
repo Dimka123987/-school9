@@ -61,6 +61,34 @@ function saveSelfies(selfies) {
 
 // Обработчик API запросов
 function handleApiRequest(pathname, method, req, res) {
+    // GET /api/status - статус сервера и информация о селфи
+    if (method === 'GET' && pathname === '/api/status') {
+        const selfies = loadSelfies();
+        const status = {
+            server: 'CodePath Academy',
+            timestamp: new Date().toISOString(),
+            port: PORT,
+            dataDir: DATA_DIR,
+            galleryFile: GALLERY_FILE,
+            selfiesCount: selfies.length,
+            selfies: selfies.map(s => ({
+                id: s.id,
+                device: s.device,
+                timestamp: s.timestamp,
+                sizeKB: Math.round(s.photo.length / 1024)
+            }))
+        };
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        console.log('🔍 GET /api/status - Проверка статуса');
+        console.log('  📁 Папка:', DATA_DIR);
+        console.log('  📄 Файл:', GALLERY_FILE);
+        console.log('  📊 Селфи на сервере:', selfies.length);
+        res.end(JSON.stringify(status, null, 2));
+        return;
+    }
+
     // GET /api/selfies - получить все селфи
     if (method === 'GET' && pathname === '/api/selfies') {
         console.log('📤 GET /api/selfies - Запрос селфи...');
