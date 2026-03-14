@@ -688,6 +688,9 @@
         // Загрузить селфи
         function loadSelfies() {
             try {
+                console.log('📥 Начинаю загрузку селфи...');
+                console.log('🌐 Сервер URL: ' + window.location.origin + '/api/selfies');
+                
                 // Сначала пробуем загрузить с сервера (приоритет)
                 fetch('/api/selfies', {
                     method: 'GET',
@@ -697,24 +700,37 @@
                     }
                 })
                     .then(r => {
-                        if (!r.ok) throw new Error('Server error');
+                        console.log('📡 Ответ сервера:', r.status, r.statusText);
+                        if (!r.ok) throw new Error('Server error: ' + r.status);
                         return r.json();
                     })
                     .then(selfiesFromServer => {
+                        console.log('📊 Получены данные с сервера:', selfiesFromServer);
                         console.log('✓ Загружено с сервера:', selfiesFromServer.length, 'селфи');
-                        if (Array.isArray(selfiesFromServer) && selfiesFromServer.length > 0) {
+                        
+                        if (Array.isArray(selfiesFromServer)) {
                             // Кэшируем в localStorage для синхронизации
                             try {
                                 localStorage.setItem('gallery_selfies_cache', JSON.stringify(selfiesFromServer));
-                            } catch (e) {}
-                            displaySelfies(selfiesFromServer);
+                                console.log('💾 Кэш обновлен');
+                            } catch (e) {
+                                console.warn('⚠️ Ошибка кэширования:', e);
+                            }
+                            
+                            if (selfiesFromServer.length > 0) {
+                                displaySelfies(selfiesFromServer);
+                            } else {
+                                console.log('📭 На сервере нет селфи');
+                                showEmptyGallery();
+                            }
                         } else {
-                            // Если с сервера пусто, пробуем localStorage
+                            console.error('❌ Сервер вернул не массив:', typeof selfiesFromServer);
                             loadFromLocalStorage();
                         }
                     })
                     .catch(err => {
-                        console.log('⚠️ Ошибка загрузки с сервера:', err);
+                        console.log('⚠️ Ошибка загрузки с сервера:', err.message);
+                        console.log('↩️ Пытаюсь загрузить из localStorage...');
                         loadFromLocalStorage();
                     });
             } catch (error) {

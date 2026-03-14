@@ -586,26 +586,48 @@
         // Сохранение селфи на сервер
         async function saveSelfieToServer(photoData, device) {
             try {
+                if (!photoData) {
+                    console.error('❌ Нет данных фото для сохранения');
+                    return false;
+                }
+
+                // Логируем размер фото
+                const photSize = Math.round(photoData.length / 1024); // KB
+                console.log('📦 Размер фото:', photSize, 'KB');
+
+                const requestData = {
+                    photo: photoData,
+                    device: device
+                };
+
+                console.log('📡 Отправку селфи на сервер...');
+                console.log('🌐 URL: ' + window.location.origin + '/api/selfies');
+                
                 const response = await fetch('/api/selfies', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        photo: photoData,
-                        device: device
-                    })
+                    body: JSON.stringify(requestData)
                 });
+
+                console.log('📡 Ответ сервера: HTTP', response.status, response.statusText);
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('✓ Селфи сохранено на сервер:', data.id);
+                    console.log('✓ Селфи сохранено на сервер!');
+                    console.log('  ID:', data.id);
+                    console.log('  Размер:', photSize, 'KB');
+                    
                     // Кэшируем в localStorage для синхронизации
                     saveToLocalStorageCache(data);
                     return true;
                 } else {
-                    throw new Error('Server error: ' + response.status);
+                    const errorText = await response.text();
+                    console.error('❌ Ошибка сервера:', response.status);
+                    console.error('   Текст ошибки:', errorText);
+                    throw new Error('Server error: ' + response.status + ' - ' + errorText);
                 }
             } catch (err) {
-                console.log('⚠️ Не удалось сохранить на сервер:', err);
+                console.error('❌ Не удалось сохранить на сервер:', err.message);
                 console.log('⚙️ Сохраняю в localStorage как fallback');
                 saveToLocalStorage(photoData, device);
                 return false;

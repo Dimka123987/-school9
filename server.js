@@ -63,7 +63,16 @@ function saveSelfies(selfies) {
 function handleApiRequest(pathname, method, req, res) {
     // GET /api/selfies - получить все селфи
     if (method === 'GET' && pathname === '/api/selfies') {
+        console.log('📤 GET /api/selfies - Запрос селфи...');
         const selfies = loadSelfies();
+        console.log('  ✓ Загружено из файла:', selfies.length, 'селфи');
+        if (selfies.length > 0) {
+            console.log('  📊 Размеры фото:');
+            selfies.forEach((s, i) => {
+                const sizeKB = Math.round(s.photo.length / 1024);
+                console.log(`    [${i + 1}] ${s.device}: ${sizeKB} KB, ID: ${s.id}`);
+            });
+        }
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -73,10 +82,17 @@ function handleApiRequest(pathname, method, req, res) {
 
     // POST /api/selfies - сохранить новое селфи
     if (method === 'POST' && pathname === '/api/selfies') {
+        console.log('\n📥 POST /api/selfies - Получение селфи...');
         let body = '';
+        let bodySize = 0;
+
         req.on('data', chunk => {
+            bodySize += chunk.length;
+            console.log('  📦 Получен chunk:', chunk.length, 'байт (всего:', bodySize, 'байт)');
+            
             body += chunk.toString();
             if (body.length > 5000000) { // Лимит 5MB для одного селфи
+                console.error('  ❌ Ошибка: Payload слишком большой (>5MB)');
                 res.statusCode = 413;
                 res.end('Payload too large');
                 req.connection.destroy();
@@ -84,9 +100,15 @@ function handleApiRequest(pathname, method, req, res) {
         });
 
         req.on('end', () => {
+            console.log('  📊 Получено всего:', bodySize, 'байт');
             try {
                 const data = JSON.parse(body);
+                console.log('  ✓ JSON распарсен успешно');
+                console.log('  📱 Device:', data.device);
+                console.log('  📦 Размер фото (Base64):', data.photo ? Math.round(data.photo.length / 1024) + ' KB' : 'НЕТ ДАННЫХ');
+                
                 const selfies = loadSelfies();
+                console.log('  📊 Текущее количество селфи на сервере:', selfies.length);
 
                 const newSelfie = {
                     id: 'selfie-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
@@ -97,24 +119,32 @@ function handleApiRequest(pathname, method, req, res) {
                 };
 
                 selfies.push(newSelfie);
+                console.log('  ✓ Селфи добавлено, ID:', newSelfie.id);
 
                 // Лимит 100 последних селфи
                 if (selfies.length > 100) {
-                    selfies.splice(0, selfies.length - 100);
+                    const removed = selfies.length - 100;
+                    selfies.splice(0, removed);
+                    console.log('  ⚠️  Удалено старых селфи (лимит 100):', removed);
                 }
 
                 if (saveSelfies(selfies)) {
+                    console.log('  ✅ Селфи успешно сохранено на диск');
+                    console.log('  📊 Всего селфи на сервере:', selfies.length);
                     res.statusCode = 201;
                     res.setHeader('Content-Type', 'application/json');
                     res.setHeader('Access-Control-Allow-Origin', '*');
                     res.end(JSON.stringify({ success: true, id: newSelfie.id }));
                 } else {
+                    console.error('  ❌ Ошибка: Не удалось сохранить селфи на диск');
                     res.statusCode = 500;
                     res.end('Failed to save selfie');
                 }
             } catch (err) {
+                console.error('  ❌ Ошибка обработки:', err.message);
+                console.error('  📄 Размер тела запроса:', body.length, 'символов');
                 res.statusCode = 400;
-                res.end('Invalid request data');
+                res.end('Invalid request data: ' + err.message);
             }
         });
         return;
