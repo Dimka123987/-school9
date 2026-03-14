@@ -881,15 +881,33 @@
 
         function deleteFromLocalStorageFallback(id) {
             try {
+                console.log('🗑️ Удаляю селфи из localStorage:', id);
+                
                 // Удаляем из кэша
                 let cached = JSON.parse(localStorage.getItem('gallery_selfies_cache') || '[]');
+                console.log('📊 Было в кэше:', cached.length);
+                const cachedBefore = cached.length;
                 cached = cached.filter(s => s.id !== id);
-                localStorage.setItem('gallery_selfies_cache', JSON.stringify(cached));
+                console.log('📊 Осталось в кэше:', cached.length);
+                if (cached.length < cachedBefore) {
+                    localStorage.setItem('gallery_selfies_cache', JSON.stringify(cached));
+                    console.log('✓ Кэш обновлен');
+                }
 
                 // Удаляем из основного хранилища
                 let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+                console.log('📊 Было в основном:', selfies.length);
+                const selfiesBefore = selfies.length;
                 selfies = selfies.filter(s => s.id !== id);
-                localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
+                console.log('📊 Осталось в основном:', selfies.length);
+                if (selfies.length < selfiesBefore) {
+                    localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
+                    console.log('✓ Основное хранилище обновлено');
+                } else {
+                    console.log('❌ Элемент не был найден в основном хранилище!');
+                    console.log('🔍 ID для удаления:', id);
+                    console.log('📋 ID в хранилище:', selfies.map(s => s.id));
+                }
 
                 console.log('✓ Удалено из localStorage:', id);
                 loadSelfies();

@@ -89,7 +89,7 @@ function handleApiRequest(pathname, method, req, res) {
                 const selfies = loadSelfies();
 
                 const newSelfie = {
-                    id: Date.now() + Math.random().toString(36).substr(2, 9),
+                    id: 'selfie-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
                     photo: data.photo,
                     timestamp: new Date().toISOString(),
                     timeString: new Date().toLocaleString('ru-RU'),
@@ -122,22 +122,31 @@ function handleApiRequest(pathname, method, req, res) {
 
     // DELETE /api/selfies/:id - удалить селфи
     if (method === 'DELETE' && pathname.startsWith('/api/selfies/')) {
-        const id = pathname.split('/').pop();
+        const id = decodeURIComponent(pathname.split('/').pop());
+        console.log('🗑️ Удаляем селфи ID:', id);
         const selfies = loadSelfies();
+        console.log('📊 Всего селфи до удаления:', selfies.length);
+        
         const index = selfies.findIndex(s => s.id === id);
+        console.log('🔍 Найден индекс для удаления:', index);
 
         if (index > -1) {
-            selfies.splice(index, 1);
+            const deleted = selfies.splice(index, 1);
+            console.log('✓ Удалено:', deleted[0].id);
+            console.log('📊 Осталось селфи:', selfies.length);
+            
             if (saveSelfies(selfies)) {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.setHeader('Access-Control-Allow-Origin', '*');
-                res.end(JSON.stringify({ success: true }));
+                res.end(JSON.stringify({ success: true, remaining: selfies.length }));
             } else {
                 res.statusCode = 500;
                 res.end('Failed to delete selfie');
             }
         } else {
+            console.log('❌ Селфи не найдено с ID:', id);
+            console.log('📋 Доступные ID:', selfies.map(s => s.id));
             res.statusCode = 404;
             res.end('Selfie not found');
         }
