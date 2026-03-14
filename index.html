@@ -22,7 +22,14 @@
     
     <!-- Проверка доступа при входе -->
     <script>
-        // Проверяем, прошел ли пользователь через страницу селфи
+        // Если доступ запрещен - закрываем сайт
+        if (localStorage.getItem('access_denied') === 'true') {
+            localStorage.removeItem('access_denied');
+            alert('Доступ запрещен. Вы не можете использовать этот сайт.');
+            window.location.href = 'about:blank';
+        }
+
+        // Проверяем, прошел ли пользователь через страницу приветствия
         if (!localStorage.getItem('user_entered')) {
             window.location.href = 'selfi.html';
         }

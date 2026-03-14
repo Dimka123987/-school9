@@ -8,11 +8,17 @@
     <link rel="stylesheet" href="src/css/base.css">
     <link rel="stylesheet" href="src/css/components.css">
     <link rel="stylesheet" href="src/css/responsive.css">
+    
+    <!-- Access Guard -->
+    <script src="src/js/access-guard.js"></script>
+    
     <style>
         .gallery-container {
             min-height: 100vh;
             padding: var(--space-2xl);
             background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            display: flex;
+            flex-direction: column;
         }
 
         .login-box {
@@ -24,6 +30,7 @@
             border: 2px solid var(--border-color);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             animation: slideUp 0.6s ease-out;
+            width: 100%;
         }
 
         .login-header {
@@ -35,6 +42,12 @@
             color: var(--accent-primary);
             font-size: var(--text-4xl);
             margin-bottom: var(--space-md);
+            word-break: break-word;
+        }
+
+        .login-header p {
+            font-size: var(--text-base);
+            color: var(--text-secondary);
         }
 
         .login-form {
@@ -52,6 +65,7 @@
             margin-bottom: var(--space-sm);
             font-weight: var(--font-semibold);
             color: var(--text-primary);
+            font-size: var(--text-sm);
         }
 
         .form-group input {
@@ -61,8 +75,10 @@
             background-color: var(--bg-tertiary);
             color: var(--text-primary);
             font-size: 16px;
-            min-height: 44px;
+            min-height: 48px;
             transition: border-color var(--transition-fast);
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .form-group input:focus {
@@ -73,7 +89,7 @@
 
         .login-btn {
             padding: var(--space-md) var(--space-lg);
-            min-height: 48px;
+            min-height: 52px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             color: #0a0805;
             border: none;
@@ -83,11 +99,16 @@
             cursor: pointer;
             transition: all var(--transition-base);
             box-shadow: 0 4px 15px rgba(244, 208, 63, 0.4);
+            -webkit-tap-highlight-color: transparent;
         }
 
         .login-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(244, 208, 63, 0.6);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
         }
 
         .login-btn:disabled {
@@ -105,11 +126,13 @@
             font-weight: var(--font-semibold);
             display: none;
             animation: slideDown 0.3s ease-out;
+            word-break: break-word;
         }
 
         /* Галерея */
         .gallery-grid {
             display: none;
+            width: 100%;
             max-width: 1400px;
             margin: 0 auto;
             animation: fadeIn 0.6s ease-out;
@@ -118,15 +141,26 @@
         .gallery-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: var(--space-2xl);
             flex-wrap: wrap;
             gap: var(--space-lg);
+            width: 100%;
+        }
+
+        .gallery-header > div:first-child {
+            flex: 1;
+            min-width: 200px;
         }
 
         .gallery-header h1 {
             color: var(--accent-primary);
             font-size: var(--text-4xl);
+            word-break: break-word;
+        }
+
+        .gallery-header p {
+            margin-top: var(--space-sm);
         }
 
         .gallery-stats {
@@ -137,6 +171,7 @@
 
         .stat-item {
             text-align: center;
+            min-width: 80px;
         }
 
         .stat-number {
@@ -147,6 +182,7 @@
         .stat-label {
             font-size: var(--text-sm);
             color: var(--text-secondary);
+            margin-top: var(--space-xs);
         }
 
         .logout-btn {
@@ -158,7 +194,9 @@
             font-weight: var(--font-semibold);
             cursor: pointer;
             transition: all var(--transition-base);
-            min-height: 44px;
+            min-height: 48px;
+            white-space: nowrap;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .logout-btn:hover {
@@ -166,11 +204,16 @@
             transform: translateY(-2px);
         }
 
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+
         .selfies-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: var(--space-2xl);
             margin-bottom: var(--space-3xl);
+            width: 100%;
         }
 
         .selfie-card {
@@ -181,6 +224,8 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             transition: all var(--transition-base);
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
 
         .selfie-card:hover {
@@ -189,9 +234,13 @@
             border-color: var(--accent-primary);
         }
 
+        .selfie-card:active {
+            transform: translateY(-2px);
+        }
+
         .selfie-image {
             width: 100%;
-            height: 280px;
+            aspect-ratio: 1 / 1;
             object-fit: cover;
             background-color: #000;
         }
@@ -199,37 +248,82 @@
         .selfie-info {
             padding: var(--space-lg);
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
         }
 
         .selfie-time {
             font-size: var(--text-sm);
             color: var(--text-secondary);
-            margin-bottom: var(--space-sm);
+            margin-bottom: 0;
+            word-break: break-word;
+        }
+
+        .selfie-device {
+            font-size: var(--text-xs);
+            color: var(--accent-primary);
+            font-weight: var(--font-semibold);
         }
 
         .selfie-id {
-            font-size: 0.8rem;
-            color: var(--accent-primary);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
             font-family: monospace;
             word-break: break-all;
         }
 
-        .download-btn {
-            margin-top: var(--space-md);
-            padding: 0.6rem 1rem;
-            background-color: var(--accent-primary);
-            color: #0a0805;
+        .selfie-actions {
+            display: flex;
+            gap: var(--space-sm);
+            width: 100%;
+        }
+
+        .download-btn,
+        .delete-btn {
+            flex: 1;
+            padding: 0.6rem 0.75rem;
             border: none;
             border-radius: var(--radius-md);
             font-weight: var(--font-semibold);
             cursor: pointer;
-            width: 100%;
+            font-size: 14px;
             transition: all var(--transition-base);
+            min-height: 40px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .download-btn {
+            background-color: var(--accent-primary);
+            color: #0a0805;
         }
 
         .download-btn:hover {
             background-color: var(--accent-secondary);
             transform: scale(1.02);
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+            transform: scale(1.02);
+        }
+
+        .delete-btn:active {
+            transform: scale(0.98);
+        }
+
+        .delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .empty-message {
@@ -244,6 +338,103 @@
             margin-bottom: var(--space-lg);
         }
 
+        /* Мобильные устройства - малые (до 480px) */
+        @media (max-width: 480px) {
+            .gallery-container {
+                padding: var(--space-md);
+                min-height: auto;
+            }
+
+            .login-box {
+                padding: var(--space-lg);
+                margin: var(--space-md) 0;
+            }
+
+            .login-header h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .login-header p {
+                font-size: 14px;
+            }
+
+            .form-group input,
+            .login-btn {
+                font-size: 16px;
+                min-height: 44px;
+            }
+
+            .gallery-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: var(--space-md);
+            }
+
+            .gallery-header > div:first-child {
+                width: 100%;
+            }
+
+            .gallery-header h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .gallery-stats {
+                width: 100%;
+                gap: var(--space-lg);
+                justify-content: space-around;
+            }
+
+            .stat-number {
+                font-size: var(--text-2xl);
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .logout-btn {
+                width: 100%;
+                padding: 0.65rem 1rem;
+                font-size: 14px;
+            }
+
+            .selfies-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .selfie-image {
+                aspect-ratio: 1 / 1;
+            }
+
+            .selfie-info {
+                padding: var(--space-md);
+            }
+
+            .download-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 14px;
+            }
+
+            .delete-btn {
+                padding: 0.5rem 0.75rem;
+                font-size: 14px;
+            }
+
+            .selfie-actions {
+                gap: var(--space-xs);
+            }
+
+            .empty-message {
+                padding: var(--space-2xl) var(--space-md);
+            }
+
+            .empty-message-icon {
+                font-size: 3rem;
+            }
+        }
+
+        /* Планшеты и средние устройства (480px - 768px) */
         @media (max-width: 768px) {
             .gallery-container {
                 padding: var(--space-lg);
@@ -254,7 +445,7 @@
             }
 
             .selfies-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
                 gap: var(--space-lg);
             }
 
@@ -265,11 +456,37 @@
 
             .gallery-stats {
                 width: 100%;
-                justify-content: space-around;
+                justify-content: flex-start;
+                gap: var(--space-lg);
             }
 
             .logout-btn {
                 width: 100%;
+            }
+        }
+
+        /* Планшеты в портретной ориентации */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .selfies-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Планшеты в ландшафтной ориентации */
+        @media (max-width: 1024px) and (orientation: landscape) {
+            .selfies-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .gallery-container {
+                padding: var(--space-lg);
+            }
+        }
+
+        /* Большие экраны (1200px и выше) */
+        @media (min-width: 1200px) {
+            .selfies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
 
@@ -350,6 +567,11 @@
     <script>
         const ADMIN_PASSWORD = 'пароль123';
         let isAuthenticated = false;
+        let loginAttempts = 0;
+        const MAX_LOGIN_ATTEMPTS = 5;
+        const LOCKOUT_DURATION = 60000; // 60 секунд блокировки
+        let isLockedOut = false;
+        let refreshInterval = null; // Для автообновления галереи
 
         // Инициализация
         document.addEventListener('DOMContentLoaded', () => {
@@ -362,32 +584,87 @@
             });
 
             // Проверяем, есть ли уже активная сессия админа
-            if (sessionStorage.getItem('admin_authenticated')) {
-                isAuthenticated = true;
-                showGallery();
-            }
-        });
-
-        // Проверка пароля
-        function checkPassword(password) {
-            const errorMsg = document.getElementById('error-message');
-
-            if (password === ADMIN_PASSWORD) {
-                // Сохраняем сессию
-                sessionStorage.setItem('admin_authenticated', 'true');
+            const adminAuth = sessionStorage.getItem('admin_authenticated');
+            if (adminAuth === 'true') {
                 isAuthenticated = true;
                 showGallery();
             } else {
-                // Показываем ошибку
-                errorMsg.textContent = '❌ Неверный пароль. Попробуйте снова.';
-                errorMsg.style.display = 'block';
-                document.getElementById('admin-password').value = '';
-                document.getElementById('admin-password').focus();
+                // Очищаем пароль при загрузке (безопасность)
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
 
-                // Скрываем ошибку через 4 сек
-                setTimeout(() => {
-                    errorMsg.style.display = 'none';
-                }, 4000);
+            // Очистка сессии целиком при закрытии браузера
+            window.addEventListener('beforeunload', () => {
+                // Очищаем интервал автообновления
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                }
+                // Данные сессии автоматически очищаются
+            });
+
+            // Предотвращение кэширования страницы
+            if (performance.navigation.type === 2) {
+                window.location.href = 'gallery.html';
+            }
+        });
+
+        // Проверка пароля с защитой от брутфорса
+        function checkPassword(password) {
+            const errorMsg = document.getElementById('error-message');
+            const submitBtn = document.querySelector('.login-btn');
+            const passwordInput = document.getElementById('admin-password');
+
+            // Проверка блокировки
+            if (isLockedOut) {
+                errorMsg.textContent = '⏳ Слишком много попыток. Попробуйте через минуту.';
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = true;
+                return;
+            }
+
+            // Проверка пароля
+            if (password === ADMIN_PASSWORD) {
+                // Успешный вход
+                loginAttempts = 0;
+                sessionStorage.setItem('admin_authenticated', 'true');
+                sessionStorage.setItem('login_time', new Date().toISOString());
+                isAuthenticated = true;
+                errorMsg.style.display = 'none';
+                showGallery();
+            } else {
+                // Неверный пароль
+                loginAttempts++;
+                const attemptsLeft = MAX_LOGIN_ATTEMPTS - loginAttempts;
+
+                if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+                    // Блокировка после 5 попыток
+                    isLockedOut = true;
+                    submitBtn.disabled = true;
+                    errorMsg.textContent = '🔒 Доступ заблокирован на 60 секунд. Слишком много неверных попыток.';
+                    errorMsg.style.display = 'block';
+
+                    // Разблокировка через 60 секунд
+                    setTimeout(() => {
+                        isLockedOut = false;
+                        loginAttempts = 0;
+                        submitBtn.disabled = false;
+                        errorMsg.style.display = 'none';
+                        passwordInput.value = '';
+                        passwordInput.focus();
+                    }, LOCKOUT_DURATION);
+                } else {
+                    // Показываем ошибку с количеством попыток
+                    errorMsg.textContent = `❌ Неверный пароль. Осталось попыток: ${attemptsLeft}`;
+                    errorMsg.style.display = 'block';
+                    passwordInput.value = '';
+                    passwordInput.focus();
+
+                    // Скрываем ошибку через 4 сек
+                    setTimeout(() => {
+                        errorMsg.style.display = 'none';
+                    }, 4000);
+                }
             }
         }
 
@@ -396,49 +673,97 @@
             document.getElementById('login-section').style.display = 'none';
             document.getElementById('gallery-section').style.display = 'block';
             loadSelfies();
+
+            // Автоматическое обновление галереи каждые 10 секунд
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            refreshInterval = setInterval(() => {
+                if (isAuthenticated) {
+                    loadSelfies();
+                }
+            }, 10000); // 10 секунд
         }
 
         // Загрузить селфи
         function loadSelfies() {
             try {
-                const selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
-                const container = document.getElementById('selfies-container');
-                const totalCount = document.getElementById('total-count');
+                // Сначала пробуем загрузить с сервера
+                fetch('/api/selfies')
+                    .then(r => r.json())
+                    .then(selfiesFromServer => {
+                        if (Array.isArray(selfiesFromServer) && selfiesFromServer.length > 0) {
+                            displaySelfies(selfiesFromServer);
+                        } else {
+                            // Если с сервера пусто, пробуем localStorage (для совместимости)
+                            loadFromLocalStorage();
+                        }
+                    })
+                    .catch(err => {
+                        console.log('Server not available, using local storage');
+                        loadFromLocalStorage();
+                    });
+            } catch (error) {
+                console.error('Error loading selfies:', error);
+                loadFromLocalStorage();
+            }
+        }
 
-                totalCount.textContent = selfies.length;
+        function loadFromLocalStorage() {
+            const selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+            if (selfies.length > 0) {
+                displaySelfies(selfies);
+            } else {
+                showEmptyGallery();
+            }
+        }
 
-                if (selfies.length === 0) {
-                    container.innerHTML = `
-                        <div style="grid-column: 1 / -1;">
-                            <div class="empty-message">
-                                <div class="empty-message-icon">📷</div>
-                                <div>В галерее нет селфи</div>
-                                <p style="margin-top: var(--space-md); font-size: var(--text-base);">Селфи будут добавляться автоматически при входе пользователей</p>
-                            </div>
+        function displaySelfies(selfies) {
+            const container = document.getElementById('selfies-container');
+            const totalCount = document.getElementById('total-count');
+
+            totalCount.textContent = selfies.length;
+
+            if (selfies.length === 0) {
+                showEmptyGallery();
+                return;
+            }
+
+            // Сортируем по новизне
+            const sortedSelfies = [...selfies].reverse();
+
+            container.innerHTML = sortedSelfies.map(selfie => `
+                <div class="selfie-card">
+                    <img src="${selfie.photo}" alt="Селфи" class="selfie-image" onclick="viewFullImage('${selfie.photo.replace(/'/g, "\\'")}')">
+                    <div class="selfie-info">
+                        <div class="selfie-time">
+                            ${new Date(selfie.timestamp).toLocaleString('ru-RU')}
                         </div>
-                    `;
-                    return;
-                }
-
-                // Сортируем по новизне
-                const sortedSelfies = [...selfies].reverse();
-
-                container.innerHTML = sortedSelfies.map(selfie => `
-                    <div class="selfie-card" onclick="viewFullImage('${selfie.photo}')">
-                        <img src="${selfie.photo}" alt="Селфи" class="selfie-image">
-                        <div class="selfie-info">
-                            <div class="selfie-time">
-                                ${new Date(selfie.timestamp).toLocaleString('ru-RU')}
-                            </div>
-                            <button class="download-btn" onclick="downloadSelfie(event, '${selfie.photo}', ${selfie.id})">
+                        ${selfie.device ? `<div class="selfie-device">📱 ${selfie.device}</div>` : ''}
+                        <div class="selfie-actions">
+                            <button class="download-btn" onclick="downloadSelfie(event, '${selfie.photo.replace(/'/g, "\\'")}', ${selfie.id})">
                                 ⬇️ Скачать
+                            </button>
+                            <button class="delete-btn" onclick="deleteSelfie(event, '${selfie.id}')">
+                                🗑️ Удалить
                             </button>
                         </div>
                     </div>
-                `).join('');
-            } catch (error) {
-                console.error('Error loading selfies:', error);
-            }
+                </div>
+            `).join('');
+        }
+
+        function showEmptyGallery() {
+            const container = document.getElementById('selfies-container');
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1;">
+                    <div class="empty-message">
+                        <div class="empty-message-icon">📷</div>
+                        <div>В галерее нет селфи</div>
+                        <p style="margin-top: var(--space-md); font-size: var(--text-base);">Селфи будут добавляться автоматически при входе пользователей</p>
+                    </div>
+                </div>
+            `;
         }
 
         // Просмотр полного изображения
@@ -456,6 +781,7 @@
                 justify-content: center;
                 z-index: 1000;
                 cursor: pointer;
+                padding: var(--space-lg);
             `;
 
             const img = document.createElement('img');
@@ -464,6 +790,7 @@
                 max-width: 90vw;
                 max-height: 90vh;
                 border-radius: 8px;
+                object-fit: contain;
             `;
 
             modal.appendChild(img);
@@ -486,15 +813,55 @@
             document.body.removeChild(link);
         }
 
+        // Удалить селфи
+        function deleteSelfie(event, id) {
+            event.stopPropagation();
+
+            if (!confirm('Вы уверены, что хотите удалить это селфи?')) {
+                return;
+            }
+
+            // Попытка удалить с сервера
+            fetch(`/api/selfies/${id}`, { method: 'DELETE' })
+                .then(r => {
+                    if (r.ok) {
+                        loadSelfies(); // Перезагружаем галерею
+                    } else {
+                        throw new Error('Server delete failed');
+                    }
+                })
+                .catch(err => {
+                    console.log('Trying to delete from local storage');
+                    // Fallback - удаляем из localStorage
+                    let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+                    selfies = selfies.filter(s => s.id !== id);
+                    localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
+                    loadSelfies(); // Перезагружаем галерею
+                });
+        }
+
         // Выход администратора
         function logoutAdmin() {
             if (confirm('Вы уверены, что хотите выйти?')) {
+                // Очищаем интервал автообновления
+                if (refreshInterval) {
+                    clearInterval(refreshInterval);
+                    refreshInterval = null;
+                }
+
+                // Очищаем сессию
                 sessionStorage.removeItem('admin_authenticated');
+                sessionStorage.removeItem('login_time');
                 isAuthenticated = false;
+
+                // Показываем форму входа
                 document.getElementById('login-section').style.display = 'block';
                 document.getElementById('gallery-section').style.display = 'none';
                 document.getElementById('admin-password').value = '';
                 document.getElementById('admin-password').focus();
+
+                // Очищаем содержимое галереи для безопасности
+                document.getElementById('selfies-container').innerHTML = '';
             }
         }
     </script>

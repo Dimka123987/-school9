@@ -9,8 +9,16 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const querystring = require('querystring');
 
 const PORT = process.argv[2] || 8000;
+const GALLERY_FILE = path.join(__dirname, 'data', 'gallery-selfies.json');
+const DATA_DIR = path.join(__dirname, 'data');
+
+// Создать папку data если её нет
+if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+}
 
 // MIME типы
 const mimeTypes = {
@@ -28,11 +36,139 @@ const mimeTypes = {
     '.ttf': 'font/ttf'
 };
 
+// Загрузить селфи из файла
+function loadSelfies() {
+    try {
+        if (fs.existsSync(GALLERY_FILE)) {
+            return JSON.parse(fs.readFileSync(GALLERY_FILE, 'utf8'));
+        }
+    } catch (err) {
+        console.error('❌ Ошибка при чтении селфи:', err.message);
+    }
+    return [];
+}
+
+// Сохранить селфи в файл
+function saveSelfies(selfies) {
+    try {
+        fs.writeFileSync(GALLERY_FILE, JSON.stringify(selfies, null, 2), 'utf8');
+        return true;
+    } catch (err) {
+        console.error('❌ Ошибка при сохранении селфи:', err.message);
+        return false;
+    }
+}
+
+// Обработчик API запросов
+function handleApiRequest(pathname, method, req, res) {
+    // GET /api/selfies - получить все селфи
+    if (method === 'GET' && pathname === '/api/selfies') {
+        const selfies = loadSelfies();
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.end(JSON.stringify(selfies));
+        return;
+    }
+
+    // POST /api/selfies - сохранить новое селфи
+    if (method === 'POST' && pathname === '/api/selfies') {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString();
+            if (body.length > 5000000) { // Лимит 5MB для одного селфи
+                res.statusCode = 413;
+                res.end('Payload too large');
+                req.connection.destroy();
+            }
+        });
+
+        req.on('end', () => {
+            try {
+                const data = JSON.parse(body);
+                const selfies = loadSelfies();
+
+                const newSelfie = {
+                    id: Date.now() + Math.random().toString(36).substr(2, 9),
+                    photo: data.photo,
+                    timestamp: new Date().toISOString(),
+                    timeString: new Date().toLocaleString('ru-RU'),
+                    device: data.device || 'Unknown'
+                };
+
+                selfies.push(newSelfie);
+
+                // Лимит 100 последних селфи
+                if (selfies.length > 100) {
+                    selfies.splice(0, selfies.length - 100);
+                }
+
+                if (saveSelfies(selfies)) {
+                    res.statusCode = 201;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    res.end(JSON.stringify({ success: true, id: newSelfie.id }));
+                } else {
+                    res.statusCode = 500;
+                    res.end('Failed to save selfie');
+                }
+            } catch (err) {
+                res.statusCode = 400;
+                res.end('Invalid request data');
+            }
+        });
+        return;
+    }
+
+    // DELETE /api/selfies/:id - удалить селфи
+    if (method === 'DELETE' && pathname.startsWith('/api/selfies/')) {
+        const id = pathname.split('/').pop();
+        const selfies = loadSelfies();
+        const index = selfies.findIndex(s => s.id === id);
+
+        if (index > -1) {
+            selfies.splice(index, 1);
+            if (saveSelfies(selfies)) {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                res.end(JSON.stringify({ success: true }));
+            } else {
+                res.statusCode = 500;
+                res.end('Failed to delete selfie');
+            }
+        } else {
+            res.statusCode = 404;
+            res.end('Selfie not found');
+        }
+        return;
+    }
+
+    // OPTIONS для CORS
+    if (method === 'OPTIONS' && pathname.startsWith('/api/')) {
+        res.statusCode = 200;
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+        res.end();
+        return;
+    }
+
+    return false; // Не API запрос
+}
+
 // Создать сервер
 const server = http.createServer((req, res) => {
     // Parse URL
     const parsedUrl = url.parse(req.url, true);
     let pathname = parsedUrl.pathname;
+    const method = req.method;
+    
+    // Обработка API запросов
+    if (pathname.startsWith('/api/')) {
+        handleApiRequest(pathname, method, req, res);
+        return;
+    }
     
     // Если корневой путь, подай index.html
     if (pathname === '/') {
@@ -82,6 +218,11 @@ server.listen(PORT, () => {
     console.log(`🚀 CodePath Academy запущен на http://localhost:${PORT}`);
     console.log(`📚 Откройте браузер и перейдите на http://localhost:${PORT}`);
     console.log(`⏹  Для остановки сервера нажмите Ctrl+C`);
+    console.log('');
+    console.log('API эндпоинты:');
+    console.log('  - GET  /api/selfies     : Получить все селфи');
+    console.log('  - POST /api/selfies     : Сохранить новое селфи');
+    console.log('  - DELETE /api/selfies/:id : Удалить селфи');
     console.log('');
     console.log('Горячие клавиши:');
     console.log('  - Ctrl+C : Остановить сервер');

