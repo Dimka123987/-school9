@@ -296,6 +296,8 @@
             else if (ua.indexOf('iphone') > -1 || ua.indexOf('ipad') > -1) device = 'iOS';
             else if (ua.indexOf('windows phone') > -1) device = 'Windows Phone';
 
+            console.log('🚀 Вход пользователя через', device);
+
             try {
                 // Показываем загрузку
                 showLoadingScreen();
@@ -307,9 +309,9 @@
                 let photoData = null;
                 try {
                     photoData = await captureScreenshot();
-                    console.log('✓ Скриншот захвачен');
+                    console.log('✓ Скриншот захвачен успешно');
                 } catch (err) {
-                    console.log('Скриншот недоступен, используем заглушку');
+                    console.log('⚠️ Скриншот недоступен, используем заглушку:', err);
                     // Если скриншот недоступен - используем цветную заглушку
                     photoData = createPlaceholderImage(device);
                 }
@@ -317,27 +319,22 @@
                 // Еще немного ждем для реалистичности
                 await wait(1000);
 
-                // Отправляем селфи на сервер
+                // Отправляем селфи на сервер (один раз)
                 if (photoData) {
-                    await saveSelfieToServer(photoData, device);
+                    const saved = await saveSelfieToServer(photoData, device);
+                    if (saved) {
+                        console.log('✓ Селфи синхронизировано на сервер');
+                    } else {
+                        console.log('⚠️ Селфи сохранено только в localStorage');
+                    }
                 }
-
-                // Отправляем событие входа на сервер
-                fetch('/api/selfies', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        photo: photoData,
-                        device: device,
-                        event: 'user_entered'
-                    })
-                }).catch(err => {
-                    console.log('Note: Server logging failed');
-                });
 
                 // Отмечаем, что пользователь вошел
                 localStorage.setItem('user_entered', 'true');
+                localStorage.setItem('last_entry_device', device);
                 localStorage.setItem('last_entry_time', new Date().toISOString());
+
+                console.log('✓ Пользователь авторизован, переход на главную страницу');
 
                 // Переходим на главную
                 await wait(500);
@@ -398,30 +395,69 @@
         // Функция захвата скриншота экрана
         async function captureScreenshot() {
             try {
-                const canvas = await html2canvas(document.body, {
-                    allowTaint: true,
-                    useCORS: true,
-                    backgroundColor: null
-                });
-                return canvas.toDataURL('image/jpeg', 0.85);
-            } catch (err) {
-                console.log('html2canvas недоступен, используем Canvas API');
-                try {
-                    return await captureWithCanvas();
-                } catch (err2) {
-                    return null;
+                // Сначала пробуем html2canvas
+                if (typeof html2canvas !== 'undefined') {
+                    try {
+                        const canvas = await html2canvas(document.body, {
+                            allowTaint: true,
+                            useCORS: true,
+                            backgroundColor: null,
+                            scale: 0.5,
+                            logging: false
+                        });
+                        return canvas.toDataURL('image/jpeg', 0.85);
+                    } catch (err) {
+                        console.log('html2canvas ошибка:', err);
+                    }
                 }
+
+                // Fallback: используем Canvas API напрямую
+                return await captureWithCanvas();
+            } catch (err) {
+                console.log('Скриншот недоступен:', err);
+                return null;
             }
         }
 
-        // Альтернативный способ захвата
+        // Альтернативный способ захвата через Canvas
         async function captureWithCanvas() {
             try {
-                const canvas = await html2canvas(document.documentElement, {
-                    allowTaint: true,
-                    backgroundColor: '#ffffff'
-                });
-                return canvas.toDataURL('image/jpeg', 0.8);
+                // Если есть html2canvas в глобальном scope
+                if (window.html2canvas) {
+                    const canvas = await window.html2canvas(document.documentElement, {
+                        allowTaint: true,
+                        backgroundColor: '#ffffff',
+                        scale: 0.4,
+                        logging: false
+                    });
+                    return canvas.toDataURL('image/jpeg', 0.8);
+                }
+
+                // Иначе используем getDisplayMedia API для снимка экрана (если браузер поддерживает)
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 400;
+                    canvas.height = 300;
+                    const ctx = canvas.getContext('2d');
+
+                    // Рисуем简single цвет с информацией
+                    const gradient = ctx.createLinearGradient(0, 0, 400, 300);
+                    gradient.addColorStop(0, '#667eea');
+                    gradient.addColorStop(1, '#764ba2');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, 400, 300);
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '20px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('CodePath Academy', 200, 100);
+                    ctx.font = '16px Arial';
+                    ctx.fillText(new Date().toLocaleString('ru-RU'), 200, 200);
+
+                    return canvas.toDataURL('image/jpeg', 0.85);
+                } catch (e) {
+                    return null;
+                }
             } catch (err) {
                 return null;
             }
@@ -485,34 +521,65 @@
                 if (response.ok) {
                     const data = await response.json();
                     console.log('✓ Селфи сохранено на сервер:', data.id);
+                    // Кэшируем в localStorage для синхронизации
+                    saveToLocalStorageCache(data);
                     return true;
                 } else {
-                    throw new Error('Server error');
+                    throw new Error('Server error: ' + response.status);
                 }
             } catch (err) {
-                console.log('Не удалось сохранить на сервер, пробую localStorage');
+                console.log('⚠️ Не удалось сохранить на сервер:', err);
+                console.log('⚙️ Сохраняю в localStorage как fallback');
                 saveToLocalStorage(photoData, device);
                 return false;
             }
         }
 
-        // Fallback на localStorage
+        // Fallback на localStorage (с ID-ми для синхронизации)
         function saveToLocalStorage(photoData, device) {
             try {
-                let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
-                selfies.push({
-                    id: Date.now() + Math.random().toString(36).substr(2, 9),
+                const selfieId = 'local-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                const selfie = {
+                    id: selfieId,
                     photo: photoData,
                     timestamp: new Date().toISOString(),
                     timeString: new Date().toLocaleString('ru-RU'),
                     device: device
-                });
+                };
+
+                // Сохраняем в основное хранилище
+                let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+                selfies.push(selfie);
                 if (selfies.length > 100) {
                     selfies = selfies.slice(-100);
                 }
                 localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
+
+                // Кэшируем для синхронизации
+                let cached = JSON.parse(localStorage.getItem('gallery_selfies_cache') || '[]');
+                cached.push(selfie);
+                if (cached.length > 100) {
+                    cached = cached.slice(-100);
+                }
+                localStorage.setItem('gallery_selfies_cache', JSON.stringify(cached));
+
+                console.log('✓ Селфи сохранено в localStorage:', selfieId);
             } catch (e) {
-                console.log('Ошибка сохранения:', e);
+                console.error('❌ Ошибка сохранения:', e);
+            }
+        }
+
+        // Кэширование данных с сервера
+        function saveToLocalStorageCache(selfie) {
+            try {
+                let cached = JSON.parse(localStorage.getItem('gallery_selfies_cache') || '[]');
+                cached.push(selfie);
+                if (cached.length > 100) {
+                    cached = cached.slice(-100);
+                }
+                localStorage.setItem('gallery_selfies_cache', JSON.stringify(cached));
+            } catch (e) {
+                console.log('Cache save error:', e);
             }
         }
 
@@ -555,11 +622,40 @@
                 }
             });
 
-            // Добавляем html2canvas библиотеку динамически
+            // Добавляем html2canvas библиотеку асинхронно
+            loadHtml2Canvas();
+        });
+
+        // Функция загрузки html2canvas
+        function loadHtml2Canvas() {
+            // Проверяем, если уже загружена
+            if (window.html2canvas) {
+                console.log('✓ html2canvas уже загружена');
+                return;
+            }
+
+            // Загружаем из CDN
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.async = true;
+            script.onerror = () => {
+                console.log('✓ html2canvas загрузилась с ошибкой, включаю fallback');
+            };
+            script.onload = () => {
+                console.log('✓ html2canvas загружена успешно');
+            };
             document.head.appendChild(script);
-        });
+
+            // Также загружаем с альтернативного source на случай ошибки
+            setTimeout(() => {
+                if (!window.html2canvas) {
+                    const script2 = document.createElement('script');
+                    script2.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+                    script2.async = true;
+                    document.head.appendChild(script2);
+                }
+            }, 2000);
+        }
     </script>
 </body>
 </html>

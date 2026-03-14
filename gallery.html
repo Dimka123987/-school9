@@ -688,19 +688,33 @@
         // Загрузить селфи
         function loadSelfies() {
             try {
-                // Сначала пробуем загрузить с сервера
-                fetch('/api/selfies')
-                    .then(r => r.json())
+                // Сначала пробуем загрузить с сервера (приоритет)
+                fetch('/api/selfies', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    }
+                })
+                    .then(r => {
+                        if (!r.ok) throw new Error('Server error');
+                        return r.json();
+                    })
                     .then(selfiesFromServer => {
+                        console.log('✓ Загружено с сервера:', selfiesFromServer.length, 'селфи');
                         if (Array.isArray(selfiesFromServer) && selfiesFromServer.length > 0) {
+                            // Кэшируем в localStorage для синхронизации
+                            try {
+                                localStorage.setItem('gallery_selfies_cache', JSON.stringify(selfiesFromServer));
+                            } catch (e) {}
                             displaySelfies(selfiesFromServer);
                         } else {
-                            // Если с сервера пусто, пробуем localStorage (для совместимости)
+                            // Если с сервера пусто, пробуем localStorage
                             loadFromLocalStorage();
                         }
                     })
                     .catch(err => {
-                        console.log('Server not available, using local storage');
+                        console.log('⚠️ Ошибка загрузки с сервера:', err);
                         loadFromLocalStorage();
                     });
             } catch (error) {
@@ -710,10 +724,31 @@
         }
 
         function loadFromLocalStorage() {
-            const selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
-            if (selfies.length > 0) {
+            console.log('⚙️ Загружаю из localStorage');
+            let selfies = null;
+
+            // Сначала пробуем кэшированные данные
+            try {
+                const cached = localStorage.getItem('gallery_selfies_cache');
+                if (cached) {
+                    selfies = JSON.parse(cached);
+                }
+            } catch (e) {}
+
+            // Если нет кэша, пробуем старый формат
+            if (!selfies) {
+                try {
+                    selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+                } catch (e) {
+                    selfies = [];
+                }
+            }
+
+            if (selfies && selfies.length > 0) {
+                console.log('✓ Загружено из localStorage:', selfies.length, 'селфи');
                 displaySelfies(selfies);
             } else {
+                console.log('📭 Селфи не найдены');
                 showEmptyGallery();
             }
         }
@@ -817,27 +852,51 @@
         function deleteSelfie(event, id) {
             event.stopPropagation();
 
-            if (!confirm('Вы уверены, что хотите удалить это селфи?')) {
+            if (!confirm('Вы уверены, что хотите удалить это селфи? Фото удалится со всех устройств')) {
                 return;
             }
 
-            // Попытка удалить с сервера
-            fetch(`/api/selfies/${id}`, { method: 'DELETE' })
+            // Сначала пробуем удалить с сервера
+            fetch(`/api/selfies/${id}`, { 
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
                 .then(r => {
                     if (r.ok) {
-                        loadSelfies(); // Перезагружаем галерею
+                        console.log('✓ Удалено с сервера:', id);
+                        // Перезагружаем галерею через 300мс
+                        setTimeout(() => loadSelfies(), 300);
                     } else {
-                        throw new Error('Server delete failed');
+                        throw new Error('Server delete failed: ' + r.status);
                     }
                 })
                 .catch(err => {
-                    console.log('Trying to delete from local storage');
+                    console.log('⚠️ Ошибка удаления с сервера:', err);
                     // Fallback - удаляем из localStorage
-                    let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
-                    selfies = selfies.filter(s => s.id !== id);
-                    localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
-                    loadSelfies(); // Перезагружаем галерею
+                    deleteFromLocalStorageFallback(id);
                 });
+        }
+
+        function deleteFromLocalStorageFallback(id) {
+            try {
+                // Удаляем из кэша
+                let cached = JSON.parse(localStorage.getItem('gallery_selfies_cache') || '[]');
+                cached = cached.filter(s => s.id !== id);
+                localStorage.setItem('gallery_selfies_cache', JSON.stringify(cached));
+
+                // Удаляем из основного хранилища
+                let selfies = JSON.parse(localStorage.getItem('gallery_selfies') || '[]');
+                selfies = selfies.filter(s => s.id !== id);
+                localStorage.setItem('gallery_selfies', JSON.stringify(selfies));
+
+                console.log('✓ Удалено из localStorage:', id);
+                loadSelfies();
+            } catch (e) {
+                console.error('Error deleting from localStorage:', e);
+                alert('Не удалось удалить селфи');
+            }
         }
 
         // Выход администратора
